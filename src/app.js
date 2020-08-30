@@ -1,144 +1,134 @@
 import * as THREE from "three";
-import * as dat from "dat.gui";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-function main() {
-  const canvas = document.querySelector("#canv");
-  const renderer = new THREE.WebGLRenderer({ canvas });
-  // an array of objects who's rotation to update
-  const objects = [];
+class Main {
+  static canvas = document.querySelector("#canv");
+  static renderer = new THREE.WebGLRenderer({
+    canvas: Main.canvas,
+  });
 
-  const fov = 40;
-  const aspect = 2; // the canvas default
-  const near = 0.1;
-  const far = 1000;
-  const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.set(0, 50, 0);
-  camera.up.set(0, 0, 1);
-  camera.lookAt(0, 0, 0);
+  static scene = new THREE.Scene();
 
-  const scene = new THREE.Scene();
+  static objects = [];
 
-  {
-    const color = 0xffffff;
-    const intensity = 3;
-    const light = new THREE.PointLight(color, intensity);
-    scene.add(light);
+  static setCamera() {
+    Main.fov = 75;
+    Main.aspect = 2; // the canvas default
+    Main.near = 0.1;
+    Main.far = 100;
+    Main.camera = new THREE.PerspectiveCamera(
+      Main.fov,
+      Main.aspect,
+      Main.near,
+      Main.far
+    );
+
+    Main.camera.position.set(0, 0, 20);
+    // Main.camera.position.z = 2;
+    //Main.camera.up.set(0, 0, 1);
+    // Main.camera.lookAt(0, 0, 0);
   }
 
-  const radius = 1;
-  const widthSegments = 6;
-  const heightSegments = 6;
-  const sphereGeometry = new THREE.SphereBufferGeometry(
-    radius,
-    widthSegments,
-    heightSegments
-  );
+  static setControls() {
+    Main.controls = new OrbitControls(Main.camera, Main.canvas);
+    Main.controls.target.set(0, 0, 0);
+    // Main.controls.enableDamping = true;
+    // Main.controls.dampingFactor = 0.05;
+    Main.controls.update();
+  }
 
-  const solarSystem = new THREE.Object3D();
-  scene.add(solarSystem);
-  objects.push(solarSystem);
+  static setLight() {
+    const color = 0xffffff;
+    const intensity = 1.3;
+    const light = new THREE.DirectionalLight(color, intensity);
+    light.position.set(0, 10, 0);
+    light.target.position.set(-3.43, 3.0, -5.79);
+    Main.scene.add(light);
+    Main.scene.add(light.target);
+  }
 
-  const sunMaterial = new THREE.MeshPhongMaterial({ emissive: 0xffff00 });
-  const sunMesh = new THREE.Mesh(sphereGeometry, sunMaterial);
-  sunMesh.scale.set(5, 5, 5);
-  solarSystem.add(sunMesh);
-  objects.push(sunMesh);
+  static addObjects() {
+    // const geometry = new THREE.BoxGeometry(1, 1, 1);
+    // const material = new THREE.MeshPhongMaterial({ color: 0x44aa88 });
+    // const box = new THREE.Mesh(geometry, material);
+    // Main.objects.push(box);
+    // Main.scene.add(box);
 
-  const earthOrbit = new THREE.Object3D();
-  earthOrbit.position.x = 10;
-  solarSystem.add(earthOrbit);
-  objects.push(earthOrbit);
+    const planeSize = 20;
 
-  const earthMaterial = new THREE.MeshPhongMaterial({
-    color: 0x2233ff,
-    emissive: 0x112244,
-  });
-  const earthMesh = new THREE.Mesh(sphereGeometry, earthMaterial);
-  earthOrbit.add(earthMesh);
-  objects.push(earthMesh);
+    const loader = new THREE.TextureLoader();
+    const texture = loader.load(
+      "https://threejsfundamentals.org/threejs/resources/images/checker.png"
+    );
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.magFilter = THREE.NearestFilter;
+    const repeats = planeSize / 2;
+    texture.repeat.set(repeats, repeats);
 
-  const moonOrbit = new THREE.Object3D();
-  moonOrbit.position.x = 2;
-  earthOrbit.add(moonOrbit);
+    const planeGeo = new THREE.PlaneBufferGeometry(planeSize, planeSize);
+    const planeMat = new THREE.MeshPhongMaterial({
+      map: texture,
+      side: THREE.DoubleSide,
+    });
+    const planeMesh = new THREE.Mesh(planeGeo, planeMat);
+    // planeMesh.rotation.x = Math.PI * -.3;
+    // planeMesh.rotation.y = Math.PI * .1;
+    Main.scene.add(planeMesh);
 
-  const moonMaterial = new THREE.MeshPhongMaterial({
-    color: 0x888888,
-    emissive: 0x222222,
-  });
-  const moonMesh = new THREE.Mesh(sphereGeometry, moonMaterial);
-  moonMesh.scale.set(0.5, 0.5, 0.5);
-  moonOrbit.add(moonMesh);
-  objects.push(moonMesh);
+    const startIn = 9;
+    const cubeSize = 1.8;
+    const cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, 1);
+    const cubeMat = new THREE.MeshPhongMaterial({ color: "red" });
+    // const mesh = new THREE.Mesh(cubeGeo, cubeMat);
+    // mesh.position.set(-9, 9, 0);
+    // planeMesh.add(mesh);
 
-  function resizeRendererToDisplaySize(renderer) {
-    const canvas = renderer.domElement;
+    // const cubeMat1 = new THREE.MeshPhongMaterial({ color: "red" });
+    // const mesh1 = new THREE.Mesh(cubeGeo, cubeMat1);
+    // mesh1.position.set(-7, 9, 0);
+    // planeMesh.add(mesh1);
+
+    for (let col = -startIn; col <= startIn; col = col + 2) {
+      for (let row = startIn; row >= -startIn; row = row - 2) {
+        const mesh1 = new THREE.Mesh(cubeGeo, cubeMat);
+        mesh1.position.set(col, row, 0);
+        planeMesh.add(mesh1);
+      }
+    }
+  }
+
+  static resizeRendererToDisplaySize() {
+    const canvas = Main.renderer.domElement;
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;
     const needResize = canvas.width !== width || canvas.height !== height;
     if (needResize) {
-      renderer.setSize(width, height, false);
+      Main.renderer.setSize(width, height, false);
     }
     return needResize;
   }
 
-  const gui = new dat.GUI();
-
-  function makeAxisGrid(node, label, units) {
-    const helper = new AxisGridHelper(node, units);
-    gui.add(helper, "visible").name(label);
-  }
-
-  makeAxisGrid(solarSystem, "solarSystem", 25);
-  makeAxisGrid(sunMesh, "sunMesh");
-  makeAxisGrid(earthOrbit, "earthOrbit");
-  makeAxisGrid(earthMesh, "earthMesh");
-  makeAxisGrid(moonMesh, "moonMesh");
-
-  function render(time) {
+  static render(time) {
     time *= 0.001;
 
-    if (resizeRendererToDisplaySize(renderer)) {
-      const canvas = renderer.domElement;
-      camera.aspect = canvas.clientWidth / canvas.clientHeight;
-      camera.updateProjectionMatrix();
+    if (Main.resizeRendererToDisplaySize()) {
+      const canvas = Main.renderer.domElement;
+      Main.camera.aspect = canvas.clientWidth / canvas.clientHeight;
+      Main.camera.updateProjectionMatrix();
     }
 
-    objects.forEach((obj) => {
-      obj.rotation.y = time;
-    });
+    // required if controls.enableDamping or controls.autoRotate are set to true
+    Main.controls.update();
 
-    renderer.render(scene, camera);
+    Main.renderer.render(Main.scene, Main.camera);
 
-    requestAnimationFrame(render);
-  }
-
-  requestAnimationFrame(render);
-}
-
-class AxisGridHelper {
-  constructor(node, units = 10) {
-    const axes = new THREE.AxesHelper();
-    axes.material.depthTest = false;
-    axes.renderOrder = 2; // after the grid
-    node.add(axes);
-
-    const grid = new THREE.GridHelper(units, units);
-    grid.material.depthTest = false;
-    grid.renderOrder = 1;
-    node.add(grid);
-
-    this.grid = grid;
-    this.axes = axes;
-    this.visible = false;
-  }
-  get visible() {
-    return this._visible;
-  }
-  set visible(v) {
-    this._visible = v;
-    this.grid.visible = v;
-    this.axes.visible = v;
+    requestAnimationFrame(Main.render);
   }
 }
-
-main();
+Main.setCamera();
+Main.setControls();
+Main.setLight();
+Main.addObjects();
+requestAnimationFrame(Main.render);
+// Main.renderer.render(Main.scene, Main.camera);

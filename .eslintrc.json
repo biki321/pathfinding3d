@@ -9,13 +9,13 @@
   ],
 
   "plugins": ["import"],
-  //"parser": "babel-eslint",
+  "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 2018,
-    "sourceType": "module"
-    // "ecmaFeactures": {
-    //   "jsx": true
-    // }
+    "sourceType": "module",
+    "ecmaFeactures": {
+      "jsx": true
+    }
   },
   "env": {
     "es6": true,
