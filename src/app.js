@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import addObjects from "./addObjects";
+import TWEEN from "@tweenjs/tween.js";
 
 class Main {
   static canvas = document.querySelector("#canv");
@@ -61,32 +62,33 @@ class Main {
     }
     return needResize;
   }
-  static interval = 0.03;
 
-  static render(time) {
-    time *= 0.001;
+  static bfs() {
+    function render(time) {
+      //time *= 0.001;
 
-    if (Main.resizeRendererToDisplaySize()) {
-      const canvas = Main.renderer.domElement;
-      Main.camera.aspect = canvas.clientWidth / canvas.clientHeight;
-      Main.camera.updateProjectionMatrix();
+      if (Main.resizeRendererToDisplaySize()) {
+        const canvas = Main.renderer.domElement;
+        Main.camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        Main.camera.updateProjectionMatrix();
+      }
+      // required if controls.enableDamping or controls.autoRotate are set to true
+      Main.controls.update();
+
+      requestAnimationFrame(render);
+      TWEEN.update(time);
+      Main.renderer.render(Main.scene, Main.camera);
     }
-    // required if controls.enableDamping or controls.autoRotate are set to true
-    Main.controls.update();
+    requestAnimationFrame(render);
 
-    Main.objects.forEach((rowOfBoxes) => {
-      rowOfBoxes.forEach((box) => {
-        let boxmesh = box.mesh;
-        boxmesh.position.z += Main.interval;
-        if (boxmesh.position.z > 0.5 || boxmesh.position.z < -0.45) {
-          Main.interval = -Main.interval;
-        }
-      });
-    });
-
-    Main.renderer.render(Main.scene, Main.camera);
-
-    requestAnimationFrame(Main.render);
+    const positionZ = { z: -0.45 };
+    const tween = new TWEEN.Tween(positionZ)
+      .to({ z: 1.3 }, 10000)
+      .easing(TWEEN.Easing.Quadratic.Out)
+      .onUpdate(() => {
+        Main.objects[0][0].mesh.position.z = positionZ.z;
+      })
+      .start();
   }
 }
 
@@ -94,5 +96,6 @@ Main.setCamera();
 Main.setControls();
 Main.setLight();
 Main.addObjects(Main.scene, Main.objects);
-requestAnimationFrame(Main.render);
+Main.bfs();
+//requestAnimationFrame(Main.render);
 // Main.renderer.render(Main.scene, Main.camera);
