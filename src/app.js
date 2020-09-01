@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import addObjects from "./addObjects";
 import TWEEN from "@tweenjs/tween.js";
+import { noOfCubes, noOfRows, noOfCols } from "./config";
 
 class Main {
   static canvas = document.querySelector("#canv");
@@ -63,7 +64,13 @@ class Main {
     return needResize;
   }
 
+  static tweens = [];
+  static positionsZ = [];
+
   static bfs() {
+    const convertCoorToNo = (coor) => coor[0] * noOfCols + coor[1];
+    const convertNosToCoor = (A) => [Math.floor(A / noOfCols), A % noOfCols];
+
     function render(time) {
       //time *= 0.001;
 
@@ -81,14 +88,111 @@ class Main {
     }
     requestAnimationFrame(render);
 
-    const positionZ = { z: -0.45 };
-    const tween = new TWEEN.Tween(positionZ)
-      .to({ z: 1.3 }, 10000)
-      .easing(TWEEN.Easing.Quadratic.Out)
-      .onUpdate(() => {
-        Main.objects[0][0].mesh.position.z = positionZ.z;
-      })
-      .start();
+    // Main.tweens = [];
+    // Main.positionsZ = [];
+
+    for (let y = 0; y < noOfCubes; y++) {
+      let temp = [];
+      for (let x = 0; x < noOfCubes; x++) {
+        temp[x] = -1;
+      }
+      Main.tweens.push(temp);
+      Main.positionsZ.push(temp);
+    }
+
+    for (let y = 0; y < noOfCubes; y++) {
+      for (let x = 0; x < noOfCubes; x++) {
+        Main.positionsZ[y][x] = { z: -0.45 };
+        Main.tweens[y][x] = new TWEEN.Tween(Main.positionsZ[y][x])
+          .to({ z: 0.5 }, 3000)
+          .easing(TWEEN.Easing.Quadratic.Out)
+          .onUpdate((obj) => {
+            Main.objects[y][x].mesh.position.z = obj.z;
+          })
+          .delay(2000)
+          .start();
+
+        //yoyo gives a oscillatory motion
+        Main.tweens[y][x].repeat(1).yoyo({ yoyo: true });
+      }
+    }
+
+    // const startNode = [0, 0],
+    //   stopNode = [8, 8];
+    // const start = convertCoorToNo(startNode);
+    // const stop = convertCoorToNo(stopNode);
+
+    // const previous = new Map();
+    // const visited = new Set();
+    // const queue = [];
+    // const dr = [0, -1, 0, 1];
+    // const dc = [-1, 0, 1, 0];
+
+    // queue.push({ node: start, dist: 0 });
+    // visited.add(start);
+
+    // while (queue.length > 0) {
+    //   let { node, dist } = queue.shift();
+
+    //   if (node == stop) {
+    //     console.log(` shortestDistande: : ${dist}`);
+    //     return { shortestDistande: dist };
+    //   }
+
+    //   let nodeCoor = convertNosToCoor(node);
+    //   for (let i = 0; i < 4; ++i) {
+    //     let index_r = nodeCoor[0] + dr[i];
+    //     let index_c = nodeCoor[1] + dc[i];
+    //     let neighbour = [index_r, index_c];
+
+    //     console.log(`index_r: ${index_r}, index_c: ${index_c}`);
+    //     if (
+    //       index_r < 0 ||
+    //       index_r >= noOfRows ||
+    //       index_c < 0 ||
+    //       index_c >= noOfCols
+    //     ) {
+    //       continue;
+    //     }
+
+    //     let neighbour1 = convertCoorToNo(neighbour);
+    //     console.log(`neightbour: ${neighbour1}`);
+    //     console.log("===");
+
+    //     console.log(`visited.has(neighbour1): ${visited.has(neighbour1)}`);
+
+    //     if (!visited.has(neighbour1)) {
+    //       console.log(
+    //         `positionsZ[index_r][index_c]: ${positionsZ[index_r][index_c]}`
+    //       );
+    //       positionsZ[index_r][index_c] = { z: -0.45 };
+    //       console.log(
+    //         `positionsZ[index_r][index_c]: ${positionsZ[index_r][index_c].z}`
+    //       );
+
+    //       tweens[index_r][index_c] = new TWEEN.Tween(
+    //         positionsZ[index_r][index_c]
+    //       )
+    //         .to({ z: 0.5 }, 1500)
+    //         .easing(TWEEN.Easing.Quadratic.Out)
+    //         .onUpdate(() => {
+    //           Main.objects[index_r][index_c].mesh.position.z =
+    //             positionsZ[index_r][index_c].z;
+    //         })
+    //         .start();
+
+    //       //yoyo gives a oscillatory motion
+    //       tweens[index_r][index_c].repeat(1).yoyo({ yoyo: true });
+
+    //       previous.set(neighbour1, node);
+    //       queue.push({ node: neighbour1, dist: dist + 1 });
+    //       visited.add(neighbour1);
+    //     }
+    //   }
+    //   console.log("++++++");
+    // }
+    // //return { shortestDistance: -1, previous };
+    // console.log("Not found");
   }
 }
 

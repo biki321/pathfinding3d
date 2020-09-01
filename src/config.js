@@ -3,6 +3,8 @@ const sizeOfCube = 1.8;
 const noOfCubes = sizeOfPlane / Math.ceil(sizeOfCube);
 const topLeftCoorOfPlane_y = noOfCubes - 1;
 const topLeftCoorOfPlane_x = -(noOfCubes - 1);
+const noOfCols = 10;
+const noOfRows = 10;
 const board = new Array(noOfCubes);
 
 for (let i = 0; i < noOfCubes; i++) {
@@ -24,4 +26,6 @@ export {
   topLeftCoorOfPlane_y,
   topLeftCoorOfPlane_x,
   board,
+  noOfCols,
+  noOfRows,
 };
