@@ -8,12 +8,6 @@ import {
 } from "./config";
 
 export default (scene, objects) => {
-  // const geometry = new THREE.BoxGeometry(1, 1, 1);
-  // const material = new THREE.MeshPhongMaterial({ color: 0x44aa88 });
-  // const box = new THREE.Mesh(geometry, material);
-  // objects.push(box);
-  // scene.add(box);
-
   const planeSize = sizeOfPlane;
 
   const loader = new THREE.TextureLoader();

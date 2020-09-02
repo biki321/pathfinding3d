@@ -3,6 +3,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import addObjects from "./addObjects";
 import TWEEN from "@tweenjs/tween.js";
 import { bfs } from "./bfs";
+import { convertCoorToNo } from "./helperFunc";
 
 class Main {
   static canvas = document.querySelector("#canv");
@@ -14,6 +15,22 @@ class Main {
 
   //put meshs which need animation
   static objects = [];
+
+  //coordinates of nodes to use as blocker
+  static blockersCoor = new Set();
+  static blockersNo = new Set();
+
+  static setBlockers = (coor) => {
+    if (Array.isArray(coor)) {
+      coor.forEach((ele) => {
+        Main.blockersCoor.add(ele);
+        Main.blockersNo.add(convertCoorToNo(ele));
+      });
+    } else {
+      Main.blockersCoor.push(coor);
+      Main.blockersNo.push(convertCoorToNo(coor));
+    }
+  };
 
   static setCamera() {
     Main.fov = 75;
@@ -90,4 +107,9 @@ Main.setControls();
 Main.setLight();
 Main.addObjects(Main.scene, Main.objects);
 Main.render();
-Main.bfs(Main.objects, [0, 0], [7, 7]);
+Main.setBlockers([
+  [2, 3],
+  [2, 4],
+  [3, 2],
+]);
+Main.bfs(Main.objects, [0, 0], [7, 7], Main.blockersNo, Main.blockersCoor);

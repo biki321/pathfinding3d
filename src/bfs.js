@@ -9,7 +9,13 @@ import { sleep, convertCoorToNo, convertNosToCoor } from "./helperFunc";
 import TWEEN from "@tweenjs/tween.js";
 import { Color } from "three";
 
-const bfs = async (objects, startNode, stopNode) => {
+const bfs = async (
+  objects,
+  startNode = [0, 0],
+  stopNode = [noOfCubes - 1, noOfCubes - 1],
+  blockersNo,
+  blockersCoor
+) => {
   //delay for visual experience
   await sleep(1300);
 
@@ -25,6 +31,7 @@ const bfs = async (objects, startNode, stopNode) => {
   }
 
   await initialAnimationForStartAndEndNode(objects, startNode, stopNode);
+  await animateBLockers(objects, blockersCoor);
 
   //sleep untill initial animations of start
   //and end node are completed
@@ -84,6 +91,9 @@ const bfs = async (objects, startNode, stopNode) => {
 
       let neighbourNo = convertCoorToNo(neighbour);
 
+      //check if the node is is blocker
+      if (blockersNo.has(neighbourNo)) continue;
+
       if (!visited.has(neighbourNo)) {
         //creation of tween for the node is made to wait a little
         //bit for better visual experience
@@ -91,7 +101,8 @@ const bfs = async (objects, startNode, stopNode) => {
 
         //do not create tween for stopping node here
         //as it will be animated differently
-        if (JSON.stringify(neighbour) !== JSON.stringify(stopNode)) {
+        // if (JSON.stringify(neighbour) !== JSON.stringify(stopNode)) {
+        if (neighbourNo !== stop) {
           await addTweenToCube(tweens, objects, index_r, index_c);
         }
 
@@ -101,8 +112,8 @@ const bfs = async (objects, startNode, stopNode) => {
       }
     }
   }
-  //return { shortestDistance: -1, previous };
   console.log("Not found");
+  return { shortestDistance: -1, previous };
 };
 
 const addTweenToCube = async (tweens, objects, index_r, index_c) => {
@@ -122,8 +133,8 @@ const addTweenToCube = async (tweens, objects, index_r, index_c) => {
 
 const initialAnimationForStartAndEndNode = async (
   objects,
-  startNode,
-  stopNode
+  startNode = [0, 0],
+  stopNode = [noOfCubes - 1, noOfCubes - 1]
 ) => {
   //setting the color of starting node blue
   //and ending node as green
@@ -155,6 +166,23 @@ const initialAnimationForStartAndEndNode = async (
     .yoyo({ yoyo: true });
 
   startStopNodeTween.chain(startNodeTween2).start();
+};
+
+const animateBLockers = async (objects, blockersCoor) => {
+  // eslint-disable-next-line
+  const blockerTween = new TWEEN.Tween({ z: initialPosZOfCube })
+    .to({ z: heightestValOfZForCube }, 500)
+    .easing(TWEEN.Easing.Linear.None)
+    .onUpdate((tweenObj) => {
+      blockersCoor.forEach((coor) => {
+        objects[coor[0]][coor[1]].mesh.position.z = tweenObj.z;
+      });
+    })
+    .start();
+
+  blockersCoor.forEach((coor) => {
+    objects[coor[0]][coor[1]].mesh.material.color.setColorName("brown");
+  });
 };
 
 const animateShortestPath = async (previous, objects, start, stop, tweens) => {
