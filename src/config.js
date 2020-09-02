@@ -5,6 +5,8 @@ const topLeftCoorOfPlane_y = noOfCubes - 1;
 const topLeftCoorOfPlane_x = -(noOfCubes - 1);
 const noOfCols = 10;
 const noOfRows = 10;
+const initialPosZOfCube = -0.85;
+const heightestValOfZForCube = 0.9;
 const board = new Array(noOfCubes);
 
 for (let i = 0; i < noOfCubes; i++) {
@@ -28,4 +30,6 @@ export {
   board,
   noOfCols,
   noOfRows,
+  initialPosZOfCube,
+  heightestValOfZForCube,
 };

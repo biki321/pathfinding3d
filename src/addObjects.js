@@ -4,6 +4,7 @@ import {
   sizeOfCube,
   topLeftCoorOfPlane_y,
   topLeftCoorOfPlane_x,
+  initialPosZOfCube,
 } from "./config";
 
 export default (scene, objects) => {
@@ -12,8 +13,6 @@ export default (scene, objects) => {
   // const box = new THREE.Mesh(geometry, material);
   // objects.push(box);
   // scene.add(box);
-  console.log(scene);
-  console.log(objects);
 
   const planeSize = sizeOfPlane;
 
@@ -40,16 +39,7 @@ export default (scene, objects) => {
   const topLeftCoorInPlane_y = topLeftCoorOfPlane_y;
   const topLeftCoorInPlane_x = topLeftCoorOfPlane_x;
   const cubeSize = sizeOfCube;
-  const cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, 1);
-  const cubeMat = new THREE.MeshPhongMaterial({ color: "red" });
-  // const mesh = new THREE.Mesh(cubeGeo, cubeMat);
-  // mesh.position.set(-9, 9, 0);
-  // planeMesh.add(mesh);
-
-  // const cubeMat1 = new THREE.MeshPhongMaterial({ color: "red" });
-  // const mesh1 = new THREE.Mesh(cubeGeo, cubeMat1);
-  // mesh1.position.set(-7, 9, 0);
-  // planeMesh.add(mesh1);
+  const cubeGeo = new THREE.BoxBufferGeometry(cubeSize, cubeSize, cubeSize);
 
   for (
     let row = topLeftCoorInPlane_y;
@@ -62,10 +52,10 @@ export default (scene, objects) => {
       col <= -topLeftCoorInPlane_x;
       col = col + 2
     ) {
+      const cubeMat = new THREE.MeshPhongMaterial({ color: "red" });
       const mesh = new THREE.Mesh(cubeGeo, cubeMat);
-      mesh.position.set(col, row, -0.45);
+      mesh.position.set(col, row, initialPosZOfCube);
       planeMesh.add(mesh);
-      //temp.push(mesh);
       temp.push({ mesh: mesh });
     }
     objects.push(temp);
