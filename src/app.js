@@ -3,6 +3,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import addObjects from "./addObjects";
 import TWEEN from "@tweenjs/tween.js";
 import { bfs } from "./bfs";
+import { dijkstra } from "./dijkstra";
 import { convertCoorToNo } from "./helperFunc";
 
 class Main {
@@ -100,6 +101,9 @@ class Main {
 
   //breath first search
   static bfs = bfs;
+
+  //dijkstra algorithm
+  static dijkstra = dijkstra;
 }
 
 Main.setCamera();
@@ -112,4 +116,5 @@ Main.setBlockers([
   [2, 4],
   [3, 2],
 ]);
-Main.bfs(Main.objects, [0, 0], [7, 7], Main.blockersNo, Main.blockersCoor);
+// Main.bfs(Main.objects, [0, 0], [7, 7], Main.blockersNo, Main.blockersCoor);
+Main.dijkstra(Main.objects, [0, 0], [7, 7], Main.blockersNo, Main.blockersCoor);

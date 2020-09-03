@@ -40,10 +40,20 @@ const sleep = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
+const printPath = (previous, start, stop) => {
+  let currentNode = stop;
+  console.log(currentNode);
+  while (currentNode !== start) {
+    currentNode = previous.get(currentNode);
+    console.log(currentNode);
+  }
+};
+
 export {
   convertRegularCoorToPlaneCoor,
   convertPlaneCoorToRegularCoor,
   convertCoorToNo,
   convertNosToCoor,
   sleep,
+  printPath
 };
