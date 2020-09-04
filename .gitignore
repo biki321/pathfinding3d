@@ -5,4 +5,3 @@ dist/
 coverage/
 .vscode/
 .env
-test1.js

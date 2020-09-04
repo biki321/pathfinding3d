@@ -76,6 +76,7 @@ const bfs = async (
       // return {previous:previous, shortestDistance: dist};
       //animate the shorest path from stoping node to starting node
       await animateShortestPath(previous, objects, start, stop, tweens);
+      TWEEN.removeAll();
       return;
     }
 

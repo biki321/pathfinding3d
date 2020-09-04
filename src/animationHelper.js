@@ -99,7 +99,7 @@ const animateShortestPath = async (previous, objects, start, stop, tweens) => {
         })
         .start();
 
-      await sleep(1000);
+      await sleep(2000);
 
       break;
     }

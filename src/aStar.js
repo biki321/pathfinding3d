@@ -14,8 +14,15 @@ import {
 } from "./animationHelper";
 import TWEEN from "@tweenjs/tween.js";
 
+const heuristic = (pos1, pos2) => {
+  // This is the Manhattan distance
+  let d1 = Math.abs(pos1[0] - pos2[0]);
+  let d2 = Math.abs(pos1[1] - pos2[1]);
+  return d1 + d2;
+};
+
 // eslint-disable-next-line
-const dijkstra = async (
+const aStar = async (
   objects,
   startNode = [0, 0],
   stopNode = [noOfCubes - 1, noOfCubes - 1],
@@ -112,12 +119,15 @@ const dijkstra = async (
         await sleep(100);
 
         const newPathLength = distances.get(n.value) + 1;
+        const newPathLengthWithHeuristic =
+          newPathLength + heuristic(neighbour, stopNode);
 
         const oldPathLength = distances.get(neighbourNo);
+
         if (newPathLength < oldPathLength) {
           distances.set(neighbourNo, newPathLength);
           previous.set(neighbourNo, n.value);
-          remaining.insert(neighbourNo, newPathLength);
+          remaining.insert(neighbourNo, newPathLengthWithHeuristic);
           //do not create tween for stopping node here
           //as it will be animated differently
           // if (JSON.stringify(neighbour) !== JSON.stringify(stopNode)) {
@@ -132,4 +142,4 @@ const dijkstra = async (
   return { shortestDist: -1, path: previous };
 };
 
-export { dijkstra };
+export { aStar };
