@@ -7,7 +7,7 @@ import {
   initialPosZOfCube,
 } from "./config";
 
-export default (scene, objects) => {
+export default function () {
   const planeSize = sizeOfPlane;
 
   const loader = new THREE.TextureLoader();
@@ -28,7 +28,7 @@ export default (scene, objects) => {
   const planeMesh = new THREE.Mesh(planeGeo, planeMat);
   // planeMesh.rotation.x = Math.PI * -.3;
   // planeMesh.rotation.y = Math.PI * .1;
-  scene.add(planeMesh);
+  this.scene.add(planeMesh);
 
   const topLeftCoorInPlane_y = topLeftCoorOfPlane_y;
   const topLeftCoorInPlane_x = topLeftCoorOfPlane_x;
@@ -52,6 +52,6 @@ export default (scene, objects) => {
       planeMesh.add(mesh);
       temp.push({ mesh: mesh });
     }
-    objects.push(temp);
+    this.objects.push(temp);
   }
-};
+}

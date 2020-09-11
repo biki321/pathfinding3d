@@ -22,13 +22,10 @@ const heuristic = (pos1, pos2) => {
 };
 
 // eslint-disable-next-line
-const aStar = async (
-  objects,
+const aStar = async function (
   startNode = [0, 0],
-  stopNode = [noOfCubes - 1, noOfCubes - 1],
-  blockersNo,
-  blockersCoor
-) => {
+  stopNode = [noOfCubes - 1, noOfCubes - 1]
+) {
   //delay for visual experience
   await sleep(1300);
 
@@ -43,8 +40,8 @@ const aStar = async (
     tweens.push(temp);
   }
 
-  await initialAnimationForStartAndEndNode(objects, startNode, stopNode);
-  await animateBLockers(objects, blockersCoor);
+  await initialAnimationForStartAndEndNode(this.objects, startNode, stopNode);
+  await animateBLockers(this.objects, this.blockersCoor);
 
   //sleep untill initial animations of start
   //and end node are completed
@@ -83,14 +80,14 @@ const aStar = async (
         .yoyo(true)
         .easing(TWEEN.Easing.Linear.None)
         .onUpdate((tweenObj) => {
-          objects[stopNode[0]][stopNode[1]].mesh.position.z = tweenObj.z;
+          this.objects[stopNode[0]][stopNode[1]].mesh.position.z = tweenObj.z;
         })
         .start();
 
       await sleep(1200);
       // return {previous:previous, shortestDistance: dist};
       //animate the shorest path from stoping node to starting node
-      await animateShortestPath(previous, objects, start, stop, tweens);
+      await animateShortestPath(previous, this.objects, start, stop, tweens);
       TWEEN.removeAll();
       return;
     }
@@ -111,7 +108,7 @@ const aStar = async (
       let neighbourNo = convertCoorToNo(neighbour);
 
       //check if the node is is blocker
-      if (blockersNo.has(neighbourNo)) continue;
+      if (this.blockersNo.has(neighbourNo)) continue;
 
       if (!visited.has(neighbourNo)) {
         //creation of tween for the node is made to wait a little
@@ -132,7 +129,7 @@ const aStar = async (
           //as it will be animated differently
           // if (JSON.stringify(neighbour) !== JSON.stringify(stopNode)) {
           if (neighbourNo !== stop) {
-            await addTweenToCube(tweens, objects, index_r, index_c);
+            await addTweenToCube(tweens, this.objects, index_r, index_c);
           }
         }
       }

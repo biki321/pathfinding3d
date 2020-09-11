@@ -7,118 +7,120 @@ import { dijkstra } from "./dijkstra";
 import { aStar } from "./aStar";
 import { convertCoorToNo } from "./helperFunc";
 
-class Main {
-  static canvas = document.querySelector("#canv");
-  static renderer = new THREE.WebGLRenderer({
-    canvas: Main.canvas,
-  });
+var main = {
+  canvas: document.querySelector("#canv"),
+  // renderer: new THREE.WebGLRenderer({
+  //   canvas: Main.canvas,
+  // }),
 
-  static scene = new THREE.Scene();
+  scene: new THREE.Scene(),
 
   //put meshs which need animation
-  static objects = [];
+  objects: [],
 
   //coordinates of nodes to use as blocker
-  static blockersCoor = new Set();
-  static blockersNo = new Set();
+  blockersCoor: new Set(),
+  blockersNo: new Set(),
 
-  static setBlockers = (coor) => {
-    if (Array.isArray(coor)) {
-      coor.forEach((ele) => {
-        Main.blockersCoor.add(ele);
-        Main.blockersNo.add(convertCoorToNo(ele));
+  setRenderer() {
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: this.canvas,
+    });
+  },
+
+  setBlockers(coordinate) {
+    if (Array.isArray(coordinate)) {
+      coordinate.forEach((ele) => {
+        this.blockersCoor.add(ele);
+        this.blockersNo.add(convertCoorToNo(ele));
       });
     } else {
-      Main.blockersCoor.push(coor);
-      Main.blockersNo.push(convertCoorToNo(coor));
+      this.blockersCoor.push(coordinate);
+      this.blockersNo.push(convertCoorToNo(coordinate));
     }
-  };
+  },
 
-  static setCamera() {
-    Main.fov = 75;
-    Main.aspect = 2; // the canvas default
-    Main.near = 0.1;
-    Main.far = 100;
-    Main.camera = new THREE.PerspectiveCamera(
-      Main.fov,
-      Main.aspect,
-      Main.near,
-      Main.far
-    );
+  setCamera() {
+    let fov = 75;
+    let aspect = 2; // the canvas default
+    let near = 0.1;
+    let far = 100;
+    this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
-    Main.camera.position.set(0, 0, 20);
-    // Main.camera.position.z = 2;
-    //Main.camera.up.set(0, 0, 1);
-    // Main.camera.lookAt(0, 0, 0);
-  }
+    this.camera.position.set(0, 0, 20);
+    // Main.camera.position.z : 2,
+    //Main.camera.up.set(0, 0, 1),
+    // Main.camera.lookAt(0, 0, 0),
+  },
 
-  static setControls() {
-    Main.controls = new OrbitControls(Main.camera, Main.canvas);
-    Main.controls.target.set(0, 0, 0);
-    // Main.controls.enableDamping = true;
-    // Main.controls.dampingFactor = 0.05;
-    Main.controls.update();
-  }
+  setControls() {
+    this.controls = new OrbitControls(this.camera, this.canvas);
+    this.controls.target.set(0, 0, 0);
+    // Main.controls.enableDamping : true,
+    // Main.controls.dampingFactor : 0.05,
+    this.controls.update();
+  },
 
-  static setLight() {
+  setLight() {
     const color = 0xffffff;
     const intensity = 1.3;
     const light = new THREE.DirectionalLight(color, intensity);
     light.position.set(0, 10, 0);
     light.target.position.set(-3.43, 3.0, -5.79);
-    Main.scene.add(light);
-    Main.scene.add(light.target);
-  }
+    this.scene.add(light);
+    this.scene.add(light.target);
+  },
 
-  static addObjects = addObjects;
+  addObjects: addObjects,
 
-  static resizeRendererToDisplaySize() {
-    const canvas = Main.renderer.domElement;
+  resizeRendererToDisplaySize() {
+    const canvas = this.renderer.domElement;
     const width = canvas.clientWidth;
     const height = canvas.clientHeight;
     const needResize = canvas.width !== width || canvas.height !== height;
     if (needResize) {
-      Main.renderer.setSize(width, height, false);
+      this.renderer.setSize(width, height, false);
     }
     return needResize;
-  }
+  },
 
-  static render(time) {
-    requestAnimationFrame(Main.render);
-    //time *= 0.001;
+  render(time) {
+    requestAnimationFrame(this.render.bind(this));
+    //time *: 0.001,
 
-    if (Main.resizeRendererToDisplaySize()) {
-      const canvas = Main.renderer.domElement;
-      Main.camera.aspect = canvas.clientWidth / canvas.clientHeight;
-      Main.camera.updateProjectionMatrix();
+    if (this.resizeRendererToDisplaySize()) {
+      const canvas = this.renderer.domElement;
+      this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
+      this.camera.updateProjectionMatrix();
     }
     // required if controls.enableDamping or controls.autoRotate are set to true
-    Main.controls.update();
+    this.controls.update();
 
-    // requestAnimationFrame(render);
+    // requestAnimationFrame(render),
     TWEEN.update(time);
-    Main.renderer.render(Main.scene, Main.camera);
-  }
+    this.renderer.render(this.scene, this.camera);
+  },
 
   //breath first search
-  static bfs = bfs;
+  bfs: bfs,
 
   //dijkstra algorithm
-  static dijkstra = dijkstra;
+  dijkstra: dijkstra,
 
-  static aStar = aStar;
-}
+  aStar: aStar,
+};
 
-Main.setCamera();
-Main.setControls();
-Main.setLight();
-Main.addObjects(Main.scene, Main.objects);
-Main.render();
-Main.setBlockers([
+main.setCamera();
+main.setControls();
+main.setLight();
+main.addObjects();
+main.setRenderer();
+main.render();
+main.setBlockers([
   [2, 3],
   [2, 4],
   [3, 2],
 ]);
-Main.bfs(Main.objects, [0, 0], [7, 7], Main.blockersNo, Main.blockersCoor);
-// Main.dijkstra(Main.objects, [0, 0], [7, 7], Main.blockersNo, Main.blockersCoor);
-// Main.aStar(Main.objects, [0, 0], [7, 7], Main.blockersNo, Main.blockersCoor);
+main.bfs([0, 0], [7, 7]);
+// main.dijkstra( [0, 0], [7, 7]);
+// main.aStar( [0, 0], [7, 7]);
