@@ -4,22 +4,23 @@ import {
   noOfRows,
   // initialPosZOfCube,
   heightestValOfZForCube,
-} from "./config";
-import { sleep, convertCoorToNo, convertNosToCoor } from "./helperFunc";
+} from "../config";
+import { sleep, convertCoorToNo, convertNosToCoor } from "../helperFunc";
 import {
-  animateBLockers,
-  initialAnimationForStartAndEndNode,
-  addTweenToCube,
+  // animateBLockers,
+  // initialAnimationForStartAndEndNode,
+  addTweenToCubeDuringAlgoRunning,
   animateShortestPath,
-} from "./animationHelper";
+} from "../animationHelper";
 import TWEEN from "@tweenjs/tween.js";
 
-const bfs = async function (
+async function bfs(
   startNode = [0, 0],
-  stopNode = [noOfCubes - 1, noOfCubes - 1]
+  stopNode = [noOfCubes - 1, noOfCubes - 1],
+  blockersNo = new Set()
 ) {
   //delay for visual experience
-  await sleep(1300);
+  await sleep(1000);
 
   //it will store tween object for all the cubes in the board
   const tweens = [];
@@ -32,12 +33,12 @@ const bfs = async function (
     tweens.push(temp);
   }
 
-  await initialAnimationForStartAndEndNode(this.objects, startNode, stopNode);
-  await animateBLockers(this.objects, this.blockersCoor);
+  // await initialAnimationForStartAndEndNode(this.objects, startNode, stopNode);
+  // await animateBLockers(this.objects, this.blockersCoor);
 
   //sleep untill initial animations of start
   //and end node are completed
-  await sleep(1300);
+  // await sleep(1300);
 
   //starting of the BFS algorithm
   const start = convertCoorToNo(startNode);
@@ -73,7 +74,8 @@ const bfs = async function (
       // return {previous:previous, shortestDistance: dist};
       //animate the shorest path from stoping node to starting node
       await animateShortestPath(previous, this.objects, start, stop, tweens);
-      TWEEN.removeAll();
+      // TWEEN.removeAll();
+      // this.setMeshesToDefaut();
       return;
     }
 
@@ -95,7 +97,7 @@ const bfs = async function (
       let neighbourNo = convertCoorToNo(neighbour);
 
       //check if the node is is blocker
-      if (this.blockersNo.has(neighbourNo)) continue;
+      if (blockersNo.has(neighbourNo)) continue;
 
       if (!visited.has(neighbourNo)) {
         //creation of tween for the node is made to wait a little
@@ -106,7 +108,12 @@ const bfs = async function (
         //as it will be animated differently
         // if (JSON.stringify(neighbour) !== JSON.stringify(stopNode)) {
         if (neighbourNo !== stop) {
-          await addTweenToCube(tweens, this.objects, index_r, index_c);
+          await addTweenToCubeDuringAlgoRunning(
+            tweens,
+            this.objects,
+            index_r,
+            index_c
+          );
         }
 
         previous.set(neighbourNo, node);
@@ -117,6 +124,6 @@ const bfs = async function (
   }
   console.log("Not found");
   return { shortestDistance: -1, previous };
-};
+}
 
 export { bfs };

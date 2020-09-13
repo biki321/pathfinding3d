@@ -1,18 +1,15 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import addObjects from "./addObjects";
+import { addObjects } from "./addObjects";
 import TWEEN from "@tweenjs/tween.js";
-import { bfs } from "./bfs";
-import { dijkstra } from "./dijkstra";
-import { aStar } from "./aStar";
 import { convertCoorToNo } from "./helperFunc";
+import { initialColorOfCube, initialPosZOfCube } from "./config";
+import { setButtonsevents } from "./buttonsControls";
+import { setStartStopBlocNodes } from "./setStartStopBlocNodes";
+import { runAlgorithm } from "./runAlgorithm";
 
 var main = {
   canvas: document.querySelector("#canv"),
-  // renderer: new THREE.WebGLRenderer({
-  //   canvas: Main.canvas,
-  // }),
-
   scene: new THREE.Scene(),
 
   //put meshs which need animation
@@ -53,7 +50,7 @@ var main = {
     // Main.camera.lookAt(0, 0, 0),
   },
 
-  setControls() {
+  setBoardControls() {
     this.controls = new OrbitControls(this.camera, this.canvas);
     this.controls.target.set(0, 0, 0);
     // Main.controls.enableDamping : true,
@@ -69,6 +66,15 @@ var main = {
     light.target.position.set(-3.43, 3.0, -5.79);
     this.scene.add(light);
     this.scene.add(light.target);
+  },
+
+  setMeshesToDefaut() {
+    this.objects.forEach((rowOfObject) => {
+      rowOfObject.forEach((object) => {
+        object.mesh.material.color.setColorName(initialColorOfCube);
+        object.mesh.position.z = initialPosZOfCube;
+      });
+    });
   },
 
   addObjects: addObjects,
@@ -95,32 +101,33 @@ var main = {
     }
     // required if controls.enableDamping or controls.autoRotate are set to true
     this.controls.update();
-
-    // requestAnimationFrame(render),
     TWEEN.update(time);
     this.renderer.render(this.scene, this.camera);
   },
-
-  //breath first search
-  bfs: bfs,
-
-  //dijkstra algorithm
-  dijkstra: dijkstra,
-
-  aStar: aStar,
 };
 
-main.setCamera();
-main.setControls();
-main.setLight();
-main.addObjects();
-main.setRenderer();
-main.render();
-main.setBlockers([
-  [2, 3],
-  [2, 4],
-  [3, 2],
-]);
-main.bfs([0, 0], [7, 7]);
-// main.dijkstra( [0, 0], [7, 7]);
-// main.aStar( [0, 0], [7, 7]);
+function setUpBoard() {
+  main.setCamera();
+  main.setBoardControls();
+  main.setLight();
+  main.addObjects();
+  main.setRenderer();
+  main.render();
+}
+
+function driver() {
+  setUpBoard();
+
+  //in the ui the user have to press buttons
+  //like setStartNode, setStopNode, setblockers
+  setButtonsevents();
+
+  setStartStopBlocNodes(
+    main.scene.getObjectByName("planeMesh").children,
+    main.camera
+  );
+
+  runAlgorithm.call(main);
+}
+
+driver();

@@ -6,7 +6,7 @@ coverage/
 .vscode/
 .env
 test1.js
-test2.js
+test2.html
 test3.js
 test4.js
 app2.js

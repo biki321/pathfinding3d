@@ -4,30 +4,31 @@ import {
   noOfRows,
   noOfCubes,
   heightestValOfZForCube,
-} from "./config";
-import { sleep, convertCoorToNo, convertNosToCoor } from "./helperFunc";
+} from "../config";
+import { sleep, convertCoorToNo, convertNosToCoor } from "../helperFunc";
 import {
-  animateBLockers,
-  initialAnimationForStartAndEndNode,
-  addTweenToCube,
+  // animateBLockers,
+  // initialAnimationForStartAndEndNode,
+  addTweenToCubeDuringAlgoRunning,
   animateShortestPath,
-} from "./animationHelper";
+} from "../animationHelper";
 import TWEEN from "@tweenjs/tween.js";
 
-const heuristic = (pos1, pos2) => {
+function heuristic(pos1, pos2) {
   // This is the Manhattan distance
   let d1 = Math.abs(pos1[0] - pos2[0]);
   let d2 = Math.abs(pos1[1] - pos2[1]);
   return d1 + d2;
-};
+}
 
 // eslint-disable-next-line
-const aStar = async function (
+async function aStar(
   startNode = [0, 0],
-  stopNode = [noOfCubes - 1, noOfCubes - 1]
+  stopNode = [noOfCubes - 1, noOfCubes - 1],
+  blockersNo = new Set()
 ) {
   //delay for visual experience
-  await sleep(1300);
+  await sleep(1000);
 
   //it will store tween object for all the cubes in the board
   const tweens = [];
@@ -40,12 +41,12 @@ const aStar = async function (
     tweens.push(temp);
   }
 
-  await initialAnimationForStartAndEndNode(this.objects, startNode, stopNode);
-  await animateBLockers(this.objects, this.blockersCoor);
+  // await initialAnimationForStartAndEndNode(this.objects, startNode, stopNode);
+  // await animateBLockers(this.objects, this.blockersCoor);
 
   //sleep untill initial animations of start
   //and end node are completed
-  await sleep(1300);
+  // await sleep(1300);
 
   //starting of the algorithm
   const start = convertCoorToNo(startNode);
@@ -88,7 +89,7 @@ const aStar = async function (
       // return {previous:previous, shortestDistance: dist};
       //animate the shorest path from stoping node to starting node
       await animateShortestPath(previous, this.objects, start, stop, tweens);
-      TWEEN.removeAll();
+      // TWEEN.removeAll();
       return;
     }
 
@@ -108,7 +109,7 @@ const aStar = async function (
       let neighbourNo = convertCoorToNo(neighbour);
 
       //check if the node is is blocker
-      if (this.blockersNo.has(neighbourNo)) continue;
+      if (blockersNo.has(neighbourNo)) continue;
 
       if (!visited.has(neighbourNo)) {
         //creation of tween for the node is made to wait a little
@@ -129,7 +130,12 @@ const aStar = async function (
           //as it will be animated differently
           // if (JSON.stringify(neighbour) !== JSON.stringify(stopNode)) {
           if (neighbourNo !== stop) {
-            await addTweenToCube(tweens, this.objects, index_r, index_c);
+            await addTweenToCubeDuringAlgoRunning(
+              tweens,
+              this.objects,
+              index_r,
+              index_c
+            );
           }
         }
       }
@@ -137,6 +143,6 @@ const aStar = async function (
   }
 
   return { shortestDist: -1, path: previous };
-};
+}
 
 export { aStar };

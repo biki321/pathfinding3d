@@ -4,10 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./main.css" />
-    <title>Tutorial3d</title>
+    <title>PathFinding3D</title>
   </head>
   <body class="body">
-    <canvas id="canv"></canvas>
+    <div class="contain">
+      <canvas id="canv"></canvas>
+      <div class="controls">
+        <select id="algorithms">
+          <option value="dijkstra">Dijkstra</option>
+          <option value="aStar">Astar</option>
+          <option value="bfs">Bfs</option>
+        </select>
+        <button class="setStartNode">SetStartNode</button>
+        <button class="setStopNode">SetStopNode</button>
+        <button class="setBlockers">SetBlockers</button>
+
+        <button class="startButton">Start</button>
+      </div>
+    </div>
+
     <script src="./app.js"></script>
   </body>
 </html>

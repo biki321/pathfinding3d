@@ -5,9 +5,10 @@ import {
   topLeftCoorOfPlane_y,
   topLeftCoorOfPlane_x,
   initialPosZOfCube,
+  initialColorOfCube,
 } from "./config";
 
-export default function () {
+function addObjects() {
   const planeSize = sizeOfPlane;
 
   const loader = new THREE.TextureLoader();
@@ -26,6 +27,7 @@ export default function () {
     side: THREE.DoubleSide,
   });
   const planeMesh = new THREE.Mesh(planeGeo, planeMat);
+  planeMesh.name = "planeMesh";
   // planeMesh.rotation.x = Math.PI * -.3;
   // planeMesh.rotation.y = Math.PI * .1;
   this.scene.add(planeMesh);
@@ -46,8 +48,11 @@ export default function () {
       col <= -topLeftCoorInPlane_x;
       col = col + 2
     ) {
-      const cubeMat = new THREE.MeshPhongMaterial({ color: "red" });
+      const cubeMat = new THREE.MeshPhongMaterial({
+        color: initialColorOfCube,
+      });
       const mesh = new THREE.Mesh(cubeGeo, cubeMat);
+      mesh.info = { col: col, row: row };
       mesh.position.set(col, row, initialPosZOfCube);
       planeMesh.add(mesh);
       temp.push({ mesh: mesh });
@@ -55,3 +60,5 @@ export default function () {
     this.objects.push(temp);
   }
 }
+
+export { addObjects };
