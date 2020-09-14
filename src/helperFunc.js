@@ -7,6 +7,7 @@ import {
   colorForStopCube,
   colorForBlockerCube,
   initialColorOfCube,
+  initialPosZOfCube,
 } from "./config";
 import TWEEN from "@tweenjs/tween.js";
 import {
@@ -160,9 +161,44 @@ function setStartStopBlockerAndAnimate(pickedObject, cubeSelectState) {
   }
 }
 
-function clearMemory() {
+function setMeshExceptStartStopBlockNodeToDefaut(
+  setOfStartStopBlockNodes,
+  objects
+) {
+  objects.forEach((rowOfObject, rowIndx) => {
+    rowOfObject.forEach((object, colIndx) => {
+      let coorNo = convertCoorToNo([rowIndx, colIndx]);
+      if (!setOfStartStopBlockNodes.has(coorNo)) {
+        object.mesh.material.color.setColorName(initialColorOfCube);
+        object.mesh.position.z = initialPosZOfCube;
+      }
+    });
+  });
+}
+
+function copyStartStopBlockNodes() {
+  const copyOfBlockers = new Set(cubeSelectStateOrigin.blockers);
+  if (!(typeof cubeSelectStateOrigin.startNode === "undefined")) {
+    copyOfBlockers.add(convertCoorToNo(cubeSelectStateOrigin.startNode));
+  }
+  if (!(typeof cubeSelectStateOrigin.stopNode === "undefined")) {
+    copyOfBlockers.add(convertCoorToNo(cubeSelectStateOrigin.stopNode));
+  }
+  return copyOfBlockers;
+}
+
+function setMeshesToDefaut(objects) {
+  objects.forEach((rowOfObject) => {
+    rowOfObject.forEach((object) => {
+      object.mesh.material.color.setColorName(initialColorOfCube);
+      object.mesh.position.z = initialPosZOfCube;
+    });
+  });
+}
+
+function clearMemory(objects) {
   TWEEN.removeAll();
-  this.setMeshesToDefaut();
+  setMeshesToDefaut(objects);
   disposeCubeSelectState();
 }
 
@@ -174,5 +210,8 @@ export {
   sleep,
   printPath,
   setStartStopBlockerAndAnimate,
+  setMeshExceptStartStopBlockNodeToDefaut,
+  setMeshesToDefaut,
+  copyStartStopBlockNodes,
   clearMemory,
 };

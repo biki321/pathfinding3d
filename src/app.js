@@ -2,8 +2,6 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { addObjects } from "./addObjects";
 import TWEEN from "@tweenjs/tween.js";
-import { convertCoorToNo } from "./helperFunc";
-import { initialColorOfCube, initialPosZOfCube } from "./config";
 import { setButtonsevents } from "./buttonsControls";
 import { setStartStopBlocNodes } from "./setStartStopBlocNodes";
 import { runAlgorithm } from "./runAlgorithm";
@@ -15,26 +13,10 @@ var main = {
   //put meshs which need animation
   objects: [],
 
-  //coordinates of nodes to use as blocker
-  blockersCoor: new Set(),
-  blockersNo: new Set(),
-
   setRenderer() {
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
     });
-  },
-
-  setBlockers(coordinate) {
-    if (Array.isArray(coordinate)) {
-      coordinate.forEach((ele) => {
-        this.blockersCoor.add(ele);
-        this.blockersNo.add(convertCoorToNo(ele));
-      });
-    } else {
-      this.blockersCoor.push(coordinate);
-      this.blockersNo.push(convertCoorToNo(coordinate));
-    }
   },
 
   setCamera() {
@@ -66,15 +48,6 @@ var main = {
     light.target.position.set(-3.43, 3.0, -5.79);
     this.scene.add(light);
     this.scene.add(light.target);
-  },
-
-  setMeshesToDefaut() {
-    this.objects.forEach((rowOfObject) => {
-      rowOfObject.forEach((object) => {
-        object.mesh.material.color.setColorName(initialColorOfCube);
-        object.mesh.position.z = initialPosZOfCube;
-      });
-    });
   },
 
   addObjects: addObjects,
@@ -120,11 +93,12 @@ function driver() {
 
   //in the ui the user have to press buttons
   //like setStartNode, setStopNode, setblockers
-  setButtonsevents();
+  setButtonsevents(main.objects);
 
   setStartStopBlocNodes(
     main.scene.getObjectByName("planeMesh").children,
-    main.camera
+    main.camera,
+    main.objects
   );
 
   runAlgorithm.call(main);

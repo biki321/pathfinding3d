@@ -8,6 +8,8 @@ function runAlgorithm() {
   // cubeSelectStateOrigin
   let main = this;
   console.log(main.canvas);
+  const canvas = document.getElementById("canv");
+  const controls = document.getElementById("controls");
   this.canvas.addEventListener(
     "runAlgorithm",
     async function () {
@@ -18,6 +20,10 @@ function runAlgorithm() {
         typeof cubeSelectStateOrigin.startNode !== "undefined" &&
         typeof cubeSelectStateOrigin.stopNode !== "undefined"
       ) {
+        //make canvas and control area unclickable during algorithm run
+        canvas.style.pointerEvents = "none";
+        controls.style.pointerEvents = "none";
+
         console.log("under the runAlgorithm1");
         console.log(`event of runAlgo : ${event.algorithm}`);
         if (algorithms.value === "bfs") {
@@ -45,8 +51,10 @@ function runAlgorithm() {
             cubeSelectStateOrigin.blockers
           );
         }
-        console.log("clearMem");
-
+        cubeSelectStateOrigin.isRoundComplete = true;
+        //make canvas and control area clickable again after algorithm ends
+        canvas.style.pointerEvents = "auto";
+        controls.style.pointerEvents = "auto";
         // clearMemory.call(this);
       }
     }.bind(main)

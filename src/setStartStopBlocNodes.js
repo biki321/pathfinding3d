@@ -29,12 +29,13 @@ function setPickPosition(event, cubeSelectStateJson, data) {
 }
 
 //meshCubes is the objects in the main object(in app.js)
-function setStartStopBlocNodes(meshCubes, camera) {
+function setStartStopBlocNodes(meshCubes, camera, objects) {
   const pickHelper = new PickHelper();
   let dataNeeded = {
     pickHelper: pickHelper,
     children: meshCubes,
     camera: camera,
+    objects: objects,
   };
 
   let canvas = document.querySelector("#canv");
@@ -43,6 +44,11 @@ function setStartStopBlocNodes(meshCubes, camera) {
     canvas.addEventListener(
       "click",
       function (event) {
+        // if (cubeSelectState.isRoundComplete) {
+        //   const copySet = copyStartStopBlockNodes();
+        //   setMeshExceptStartStopBlockNodeToDefaut(copySet, this.objects);
+        //   cubeSelectState.isRoundComplete = false;
+        // }
         setPickPosition(event, JSON.stringify(cubeSelectState), this);
       }.bind(dataNeeded)
     );

@@ -1,4 +1,5 @@
 let cubeSelectState = {
+  isRoundComplete: false,
   //string data
   selectState: undefined,
   //array
