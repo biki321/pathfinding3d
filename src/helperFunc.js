@@ -6,15 +6,17 @@ import {
   colorForStartCube,
   colorForStopCube,
   colorForBlockerCube,
+  initialColorOfCube,
 } from "./config";
 import TWEEN from "@tweenjs/tween.js";
 import {
   cubeSelectState as cubeSelectStateOrigin,
   disposeCubeSelectState,
 } from "./cubeSelectState";
-import { addTweenToACube } from "./animationHelper";
+import { addTweenToACubeForUpOrDown } from "./animationHelper";
 
 function convertRegularCoorToPlaneCoor(regularCoor) {
+  if (typeof regularCoor === "undefined") return undefined;
   let regularCoor_row = regularCoor[0];
   let regularCoor_col = regularCoor[1];
 
@@ -28,6 +30,7 @@ function convertRegularCoorToPlaneCoor(regularCoor) {
 }
 
 function convertPlaneCoorToRegularCoor(planeCoor) {
+  if (typeof planeCoor === "undefined") return undefined;
   let planeCoor_row = planeCoor[0];
   let planeCoor_col = planeCoor[1];
 
@@ -42,8 +45,14 @@ function convertPlaneCoorToRegularCoor(planeCoor) {
 
 /* In a grid each element have a coordinate and also
 each coordinate or each element can be represented by a number  */
-const convertCoorToNo = (coor) => coor[0] * noOfCols + coor[1];
-const convertNosToCoor = (A) => [Math.floor(A / noOfCols), A % noOfCols];
+function convertCoorToNo(coordinate) {
+  if (typeof coordinate === "undefined") return undefined;
+  return coordinate[0] * noOfCols + coordinate[1];
+}
+function convertNosToCoor(A) {
+  if (typeof A === "undefined") return undefined;
+  return [Math.floor(A / noOfCols), A % noOfCols];
+}
 
 const sleep = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -60,48 +69,94 @@ function printPath(previous, start, stop) {
 
 //only for start stop and blockers
 function setStartStopBlockerAndAnimate(pickedObject, cubeSelectState) {
+  let regularCoor = convertPlaneCoorToRegularCoor([
+    pickedObject.info.row,
+    pickedObject.info.col,
+  ]);
+  let regularCoorNo = convertCoorToNo(regularCoor);
+  if (!regularCoor) return;
   if (
     cubeSelectState.selectState !== undefined &&
     cubeSelectState.selectState !== "setBlockers"
   ) {
-    let regularCoor = convertPlaneCoorToRegularCoor([
-      pickedObject.info.row,
-      pickedObject.info.col,
-    ]);
-    //update the cubeSelectStateOrigin so that it can be accessed
-    //by others too
-    if (
-      cubeSelectState.selectState === "setStartNode" &&
-      typeof cubeSelectStateOrigin.startNode === "undefined"
-    ) {
+    if (cubeSelectState.selectState === "setStartNode") {
+      if (
+        regularCoorNo === convertCoorToNo(cubeSelectStateOrigin.stopNode) ||
+        (cubeSelectStateOrigin.blockers &&
+          cubeSelectStateOrigin.blockers.has(regularCoorNo))
+      )
+        return;
+      let preObj = cubeSelectStateOrigin.startNodeObj;
+      if (
+        typeof preObj !== "undefined" &&
+        cubeSelectStateOrigin.startNode[0] == regularCoor[0] &&
+        cubeSelectStateOrigin.startNode[1] == regularCoor[1]
+      ) {
+        preObj.material.color.setColorName(initialColorOfCube);
+        addTweenToACubeForUpOrDown(preObj, "down");
+        cubeSelectStateOrigin.startNode = undefined;
+        cubeSelectStateOrigin.startNodeObj = undefined;
+        return;
+      } else if (typeof preObj !== "undefined") {
+        preObj.material.color.setColorName(initialColorOfCube);
+        addTweenToACubeForUpOrDown(preObj, "down");
+      }
       cubeSelectStateOrigin.startNode = regularCoor;
+      cubeSelectStateOrigin.startNodeObj = pickedObject;
       pickedObject.material.color.setColorName(colorForStartCube);
-      addTweenToACube(pickedObject);
+      addTweenToACubeForUpOrDown(pickedObject);
     }
 
-    if (
-      cubeSelectState.selectState === "setStopNode" &&
-      typeof cubeSelectStateOrigin.stopNode === "undefined"
-    ) {
+    if (cubeSelectState.selectState === "setStopNode") {
+      if (
+        regularCoorNo === convertCoorToNo(cubeSelectStateOrigin.startNode) ||
+        (cubeSelectStateOrigin.blockers &&
+          cubeSelectStateOrigin.blockers.has(regularCoorNo))
+      )
+        return;
+      let preObj = cubeSelectStateOrigin.stopNodeObj;
+      if (
+        typeof preObj !== "undefined" &&
+        cubeSelectStateOrigin.stopNode[0] == regularCoor[0] &&
+        cubeSelectStateOrigin.stopNode[1] == regularCoor[1]
+      ) {
+        preObj.material.color.setColorName(initialColorOfCube);
+        addTweenToACubeForUpOrDown(preObj, "down");
+        cubeSelectStateOrigin.stopNode = undefined;
+        cubeSelectStateOrigin.stopNodeObj = undefined;
+        return;
+      } else if (typeof preObj !== "undefined") {
+        preObj.material.color.setColorName(initialColorOfCube);
+        addTweenToACubeForUpOrDown(preObj, "down");
+      }
       cubeSelectStateOrigin.stopNode = regularCoor;
+      cubeSelectStateOrigin.stopNodeObj = pickedObject;
       pickedObject.material.color.setColorName(colorForStopCube);
-      addTweenToACube(pickedObject);
+      addTweenToACubeForUpOrDown(pickedObject);
     }
   } else if (cubeSelectState.selectState === "setBlockers") {
-    let regularCoor = convertPlaneCoorToRegularCoor([
-      pickedObject.info.row,
-      pickedObject.info.col,
-    ]);
+    if (
+      regularCoorNo === convertCoorToNo(cubeSelectStateOrigin.startNode) ||
+      regularCoorNo === convertCoorToNo(cubeSelectStateOrigin.stopNode)
+    )
+      return;
     if (typeof cubeSelectStateOrigin.blockers === "undefined") {
       cubeSelectStateOrigin.blockers = new Set();
-      cubeSelectStateOrigin.blockers.add(convertCoorToNo(regularCoor));
-      pickedObject.material.color.setColorName(colorForBlockerCube);
-      addTweenToACube(pickedObject);
-    } else {
-      cubeSelectStateOrigin.blockers.add(convertCoorToNo(regularCoor));
-      pickedObject.material.color.setColorName(colorForBlockerCube);
-      addTweenToACube(pickedObject);
     }
+    // let upOrDown = "up";
+    // let color = colorForBlockerCube;
+    //if the block coordinate already exists
+    if (cubeSelectStateOrigin.blockers.has(regularCoorNo)) {
+      // upOrDown = "down";
+      // color = initialColorOfCube;
+      cubeSelectStateOrigin.blockers.delete(regularCoorNo);
+      pickedObject.material.color.setColorName(initialColorOfCube);
+      addTweenToACubeForUpOrDown(pickedObject, "down");
+      return;
+    }
+    cubeSelectStateOrigin.blockers.add(regularCoorNo);
+    pickedObject.material.color.setColorName(colorForBlockerCube);
+    addTweenToACubeForUpOrDown(pickedObject);
   }
 }
 

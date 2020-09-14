@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { setStartStopBlockerAndAnimate } from "./helperFunc";
+import { topLeftCoorOfPlane_x, topLeftCoorOfPlane_y } from "./config";
 
 class PickHelper {
   constructor() {
@@ -20,8 +21,16 @@ class PickHelper {
     if (intersectedObjects.length) {
       // pick the first object. It's the closest one
       this.pickedObject = intersectedObjects[0].object;
-      // console.log(this.pickedObject.info);
-      setStartStopBlockerAndAnimate(this.pickedObject, cubeSelectState);
+
+      if (
+        this.pickedObject.info.col >= topLeftCoorOfPlane_x &&
+        this.pickedObject.info.col <= -topLeftCoorOfPlane_x &&
+        this.pickedObject.info.row <= topLeftCoorOfPlane_y &&
+        this.pickedObject.info.row >= -topLeftCoorOfPlane_y
+      ) {
+        // console.log(this.pickedObject.info);
+        setStartStopBlockerAndAnimate(this.pickedObject, cubeSelectState);
+      }
     }
   }
 }

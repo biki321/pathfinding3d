@@ -3,7 +3,9 @@ let cubeSelectState = {
   selectState: undefined,
   //array
   startNode: undefined,
+  startNodeObj: undefined,
   stopNode: undefined,
+  stopNodeObj: undefined,
   //Set
   blockers: undefined,
 };
@@ -13,5 +15,7 @@ function disposeCubeSelectState() {
   cubeSelectState.startNode = undefined;
   cubeSelectState.stopNode = undefined;
   cubeSelectState.blockers = undefined;
+  cubeSelectState.startNodeObj = undefined;
+  cubeSelectState.stopNodeObj = undefined;
 }
 export { cubeSelectState, disposeCubeSelectState };

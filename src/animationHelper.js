@@ -92,15 +92,41 @@ async function addTweenToCubeDuringAlgoRunning(
   );
 }
 
-async function addTweenToACube(box) {
-  //eslint-disable-next-line
-  const tween = new TWEEN.Tween({ z: initialPosZOfCube })
-    .to({ z: heightestValOfZForCube }, 800)
-    .easing(TWEEN.Easing.Linear.None)
-    .onUpdate((tweenObj) => {
-      box.position.z = tweenObj.z;
-    })
-    .start();
+//toMoveToUpOrDown can take "up" or "down"
+async function addTweenToACubeForUpOrDown(
+  box,
+  toMoveToUpOrDown = "up",
+  repeat = false
+) {
+  let startingPosOfz;
+  let endingPosOfz;
+
+  if (toMoveToUpOrDown === "up") {
+    startingPosOfz = initialPosZOfCube;
+    endingPosOfz = heightestValOfZForCube;
+  } else if (toMoveToUpOrDown === "down") {
+    startingPosOfz = heightestValOfZForCube;
+    endingPosOfz = initialPosZOfCube;
+  }
+  if (repeat) {
+    new TWEEN.Tween({ z: startingPosOfz })
+      .to({ z: endingPosOfz }, 800)
+      .easing(TWEEN.Easing.Linear.None)
+      .repeat(1)
+      .yoyo(true)
+      .onUpdate((tweenObj) => {
+        box.position.z = tweenObj.z;
+      })
+      .start();
+  } else {
+    new TWEEN.Tween({ z: startingPosOfz })
+      .to({ z: endingPosOfz }, 800)
+      .easing(TWEEN.Easing.Linear.None)
+      .onUpdate((tweenObj) => {
+        box.position.z = tweenObj.z;
+      })
+      .start();
+  }
 }
 
 async function animateShortestPath(previous, objects, start, stop, tweens) {
@@ -145,7 +171,7 @@ async function animateShortestPath(previous, objects, start, stop, tweens) {
 
 export {
   animateBLockers,
-  addTweenToACube,
+  addTweenToACubeForUpOrDown,
   initialAnimationForStartAndEndNode,
   addTweenToCubeDuringAlgoRunning,
   animateShortestPath,

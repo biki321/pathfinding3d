@@ -2,7 +2,7 @@ import { bfs } from "./algorithms/bfs";
 import { dijkstra } from "./algorithms/dijkstra";
 import { aStar } from "./algorithms/aStar";
 import { cubeSelectState as cubeSelectStateOrigin } from "./cubeSelectState";
-import { clearMemory } from "./helperFunc";
+// import { clearMemory, sleep } from "./helperFunc";
 
 function runAlgorithm() {
   // cubeSelectStateOrigin
@@ -46,7 +46,8 @@ function runAlgorithm() {
           );
         }
         console.log("clearMem");
-        clearMemory.call(this);
+
+        // clearMemory.call(this);
       }
     }.bind(main)
   );

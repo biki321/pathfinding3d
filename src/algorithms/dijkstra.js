@@ -60,6 +60,9 @@ async function dijkstra(
 
   while (!remaining.isEmpty()) {
     const n = remaining.remove();
+    console.log(n);
+    console.log(n.value);
+
     let nCoor = convertNosToCoor(n.value);
 
     visited.add(n.value);
