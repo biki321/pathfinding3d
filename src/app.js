@@ -26,7 +26,7 @@ var main = {
     let far = 100;
     this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
-    this.camera.position.set(0, 0, 20);
+    this.camera.position.set(0, 10, 25);
     // Main.camera.position.z : 2,
     //Main.camera.up.set(0, 0, 1),
     // Main.camera.lookAt(0, 0, 0),

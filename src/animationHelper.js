@@ -23,9 +23,7 @@ async function animateBLockers(objects, blockersCoor) {
     .start();
 
   blockersCoor.forEach((coor) => {
-    objects[coor[0]][coor[1]].mesh.material.color.setColorName(
-      colorForBlockerCube
-    );
+    objects[coor[0]][coor[1]].mesh.material.color.setStyle(colorForBlockerCube);
   });
 }
 
@@ -36,10 +34,10 @@ async function initialAnimationForStartAndEndNode(
 ) {
   //setting the color of starting node blue
   //and ending node as green
-  objects[startNode[0]][startNode[1]].mesh.material.color.setColorName(
+  objects[startNode[0]][startNode[1]].mesh.material.color.setStyle(
     colorForStartCube
   );
-  objects[stopNode[0]][stopNode[1]].mesh.material.color.setColorName(
+  objects[stopNode[0]][stopNode[1]].mesh.material.color.setStyle(
     colorForStopCube
   );
 
@@ -87,9 +85,7 @@ async function addTweenToCubeDuringAlgoRunning(
     .start();
 
   //change the color of the neightbour mesh also
-  objects[index_r][index_c].mesh.material.color.setColorName(
-    colorForCubeToChange
-  );
+  objects[index_r][index_c].mesh.material.color.setStyle(colorForCubeToChange);
 }
 
 //toMoveToUpOrDown can take "up" or "down"
@@ -139,9 +135,9 @@ async function animateShortestPath(previous, objects, start, stop, tweens) {
 
     //do a bit different aniamation for starting node
     if (JSON.stringify(currentNodeCoor) === JSON.stringify(startNodeCoor)) {
-      objects[startNodeCoor[0]][
-        startNodeCoor[1]
-      ].mesh.material.color.setColorName(colorForShortestPathCube);
+      objects[startNodeCoor[0]][startNodeCoor[1]].mesh.material.color.setStyle(
+        colorForShortestPathCube
+      );
 
       //eslint-disable-next-line
       const startNode = new TWEEN.Tween({ z: heightestValOfZForCube })
@@ -161,7 +157,7 @@ async function animateShortestPath(previous, objects, start, stop, tweens) {
     }
     objects[currentNodeCoor[0]][
       currentNodeCoor[1]
-    ].mesh.material.color.setColorName(colorForShortestPathCube);
+    ].mesh.material.color.setStyle(colorForShortestPathCube);
 
     tweens[currentNodeCoor[0]][currentNodeCoor[1]].start();
 

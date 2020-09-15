@@ -4,7 +4,7 @@ import {
   setMeshExceptStartStopBlockNodeToDefaut,
   copyStartStopBlockNodes,
 } from "./helperFunc";
-
+var currentbtn;
 function setButtonsevents(objects) {
   const setStartNode = document.querySelector(".setStartNode");
   const setStopNode = document.querySelector(".setStopNode");
@@ -40,6 +40,9 @@ function setButtonsevents(objects) {
     );
   });
 
+  //set meshes to default except start, stop, blocker after clicking
+  //on any of canvas, start, stop, blocker buttons
+  //provided one round of algorithm is finished
   [setStartNode, setStopNode, setBlockers, startButton, canvas].forEach(
     function (ele) {
       ele.addEventListener("click", function () {
@@ -51,6 +54,21 @@ function setButtonsevents(objects) {
       });
     }
   );
+
+  //make a button unfocused only after clicking in any other button
+  //not in screen
+  [setStartNode, setStopNode, setBlockers].forEach(function (ele) {
+    console.log("hiii");
+    ele.addEventListener("click", function () {
+      console.log(`clicked on ${this}`);
+      if (currentbtn) {
+        console.log(currentbtn);
+        currentbtn.classList.remove("highlight");
+      }
+      this.classList.add("highlight");
+      currentbtn = this;
+    });
+  });
 
   startNew.addEventListener(
     "click",

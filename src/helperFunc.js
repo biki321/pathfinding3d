@@ -69,96 +69,127 @@ function printPath(previous, start, stop) {
 }
 
 //only for start stop and blockers
-function setStartStopBlockerAndAnimate(pickedObject, cubeSelectState) {
+function setStartStopBlockerAndAnimate(pickedObject) {
+  let regularCoor = convertPlaneCoorToRegularCoor([
+    pickedObject.info.row,
+    pickedObject.info.col,
+  ]);
+  // let regularCoorNo = convertCoorToNo(regularCoor);
+  if (!regularCoor) return;
+  if (
+    cubeSelectStateOrigin.selectState !== undefined &&
+    cubeSelectStateOrigin.selectState !== "setBlockers"
+  ) {
+    if (cubeSelectStateOrigin.selectState === "setStartNode") {
+      setStartNode(pickedObject);
+    }
+
+    if (cubeSelectStateOrigin.selectState === "setStopNode") {
+      setStopNode(pickedObject);
+    }
+  } else if (cubeSelectStateOrigin.selectState === "setBlockers") {
+    setBlockerNode(pickedObject);
+  }
+}
+
+function setBlockerNode(pickedObject) {
   let regularCoor = convertPlaneCoorToRegularCoor([
     pickedObject.info.row,
     pickedObject.info.col,
   ]);
   let regularCoorNo = convertCoorToNo(regularCoor);
-  if (!regularCoor) return;
   if (
-    cubeSelectState.selectState !== undefined &&
-    cubeSelectState.selectState !== "setBlockers"
-  ) {
-    if (cubeSelectState.selectState === "setStartNode") {
-      if (
-        regularCoorNo === convertCoorToNo(cubeSelectStateOrigin.stopNode) ||
-        (cubeSelectStateOrigin.blockers &&
-          cubeSelectStateOrigin.blockers.has(regularCoorNo))
-      )
-        return;
-      let preObj = cubeSelectStateOrigin.startNodeObj;
-      if (
-        typeof preObj !== "undefined" &&
-        cubeSelectStateOrigin.startNode[0] == regularCoor[0] &&
-        cubeSelectStateOrigin.startNode[1] == regularCoor[1]
-      ) {
-        preObj.material.color.setColorName(initialColorOfCube);
-        addTweenToACubeForUpOrDown(preObj, "down");
-        cubeSelectStateOrigin.startNode = undefined;
-        cubeSelectStateOrigin.startNodeObj = undefined;
-        return;
-      } else if (typeof preObj !== "undefined") {
-        preObj.material.color.setColorName(initialColorOfCube);
-        addTweenToACubeForUpOrDown(preObj, "down");
-      }
-      cubeSelectStateOrigin.startNode = regularCoor;
-      cubeSelectStateOrigin.startNodeObj = pickedObject;
-      pickedObject.material.color.setColorName(colorForStartCube);
-      addTweenToACubeForUpOrDown(pickedObject);
-    }
-
-    if (cubeSelectState.selectState === "setStopNode") {
-      if (
-        regularCoorNo === convertCoorToNo(cubeSelectStateOrigin.startNode) ||
-        (cubeSelectStateOrigin.blockers &&
-          cubeSelectStateOrigin.blockers.has(regularCoorNo))
-      )
-        return;
-      let preObj = cubeSelectStateOrigin.stopNodeObj;
-      if (
-        typeof preObj !== "undefined" &&
-        cubeSelectStateOrigin.stopNode[0] == regularCoor[0] &&
-        cubeSelectStateOrigin.stopNode[1] == regularCoor[1]
-      ) {
-        preObj.material.color.setColorName(initialColorOfCube);
-        addTweenToACubeForUpOrDown(preObj, "down");
-        cubeSelectStateOrigin.stopNode = undefined;
-        cubeSelectStateOrigin.stopNodeObj = undefined;
-        return;
-      } else if (typeof preObj !== "undefined") {
-        preObj.material.color.setColorName(initialColorOfCube);
-        addTweenToACubeForUpOrDown(preObj, "down");
-      }
-      cubeSelectStateOrigin.stopNode = regularCoor;
-      cubeSelectStateOrigin.stopNodeObj = pickedObject;
-      pickedObject.material.color.setColorName(colorForStopCube);
-      addTweenToACubeForUpOrDown(pickedObject);
-    }
-  } else if (cubeSelectState.selectState === "setBlockers") {
-    if (
-      regularCoorNo === convertCoorToNo(cubeSelectStateOrigin.startNode) ||
-      regularCoorNo === convertCoorToNo(cubeSelectStateOrigin.stopNode)
-    )
-      return;
-    if (typeof cubeSelectStateOrigin.blockers === "undefined") {
-      cubeSelectStateOrigin.blockers = new Set();
-    }
-    // let upOrDown = "up";
-    // let color = colorForBlockerCube;
-    //if the block coordinate already exists
-    if (cubeSelectStateOrigin.blockers.has(regularCoorNo)) {
-      // upOrDown = "down";
-      // color = initialColorOfCube;
-      cubeSelectStateOrigin.blockers.delete(regularCoorNo);
-      pickedObject.material.color.setColorName(initialColorOfCube);
-      addTweenToACubeForUpOrDown(pickedObject, "down");
-      return;
-    }
-    cubeSelectStateOrigin.blockers.add(regularCoorNo);
-    pickedObject.material.color.setColorName(colorForBlockerCube);
-    addTweenToACubeForUpOrDown(pickedObject);
+    regularCoorNo === convertCoorToNo(cubeSelectStateOrigin.startNode) ||
+    regularCoorNo === convertCoorToNo(cubeSelectStateOrigin.stopNode)
+  )
+    return;
+  if (typeof cubeSelectStateOrigin.blockers === "undefined") {
+    cubeSelectStateOrigin.blockers = new Set();
   }
+  // let upOrDown = "up";
+  // let color = colorForBlockerCube;
+  //if the block coordinate already exists
+
+  if (cubeSelectStateOrigin.blockers.has(regularCoorNo)) {
+    // upOrDown = "down";
+    // color = initialColorOfCube;
+    cubeSelectStateOrigin.blockers.delete(regularCoorNo);
+    pickedObject.material.color.setStyle(initialColorOfCube);
+    addTweenToACubeForUpOrDown(pickedObject, "down");
+    return;
+  }
+  cubeSelectStateOrigin.blockers.add(regularCoorNo);
+  pickedObject.material.color.setStyle(colorForBlockerCube);
+  addTweenToACubeForUpOrDown(pickedObject);
+}
+
+function setStartNode(pickedObject) {
+  let regularCoor = convertPlaneCoorToRegularCoor([
+    pickedObject.info.row,
+    pickedObject.info.col,
+  ]);
+  let regularCoorNo = convertCoorToNo(regularCoor);
+  if (
+    regularCoorNo === convertCoorToNo(cubeSelectStateOrigin.stopNode) ||
+    (cubeSelectStateOrigin.blockers &&
+      cubeSelectStateOrigin.blockers.has(regularCoorNo))
+  )
+    return;
+  let preObj = cubeSelectStateOrigin.startNodeObj;
+
+  if (
+    typeof preObj !== "undefined" &&
+    cubeSelectStateOrigin.startNode[0] == regularCoor[0] &&
+    cubeSelectStateOrigin.startNode[1] == regularCoor[1]
+  ) {
+    preObj.material.color.setStyle(initialColorOfCube);
+    addTweenToACubeForUpOrDown(preObj, "down");
+    cubeSelectStateOrigin.startNode = undefined;
+    cubeSelectStateOrigin.startNodeObj = undefined;
+
+    return;
+  } else if (typeof preObj !== "undefined") {
+    preObj.material.color.setStyle(initialColorOfCube);
+    addTweenToACubeForUpOrDown(preObj, "down");
+  }
+  cubeSelectStateOrigin.startNode = regularCoor;
+  cubeSelectStateOrigin.startNodeObj = pickedObject;
+  pickedObject.material.color.setStyle(colorForStartCube);
+  addTweenToACubeForUpOrDown(pickedObject);
+}
+
+function setStopNode(pickedObject) {
+  let regularCoor = convertPlaneCoorToRegularCoor([
+    pickedObject.info.row,
+    pickedObject.info.col,
+  ]);
+  let regularCoorNo = convertCoorToNo(regularCoor);
+
+  if (
+    regularCoorNo === convertCoorToNo(cubeSelectStateOrigin.startNode) ||
+    (cubeSelectStateOrigin.blockers &&
+      cubeSelectStateOrigin.blockers.has(regularCoorNo))
+  )
+    return;
+  let preObj = cubeSelectStateOrigin.stopNodeObj;
+  if (
+    typeof preObj !== "undefined" &&
+    cubeSelectStateOrigin.stopNode[0] == regularCoor[0] &&
+    cubeSelectStateOrigin.stopNode[1] == regularCoor[1]
+  ) {
+    preObj.material.color.setStyle(initialColorOfCube);
+    addTweenToACubeForUpOrDown(preObj, "down");
+    cubeSelectStateOrigin.stopNode = undefined;
+    cubeSelectStateOrigin.stopNodeObj = undefined;
+    return;
+  } else if (typeof preObj !== "undefined") {
+    preObj.material.color.setStyle(initialColorOfCube);
+    addTweenToACubeForUpOrDown(preObj, "down");
+  }
+  cubeSelectStateOrigin.stopNode = regularCoor;
+  cubeSelectStateOrigin.stopNodeObj = pickedObject;
+  pickedObject.material.color.setStyle(colorForStopCube);
+  addTweenToACubeForUpOrDown(pickedObject);
 }
 
 function setMeshExceptStartStopBlockNodeToDefaut(
@@ -169,7 +200,7 @@ function setMeshExceptStartStopBlockNodeToDefaut(
     rowOfObject.forEach((object, colIndx) => {
       let coorNo = convertCoorToNo([rowIndx, colIndx]);
       if (!setOfStartStopBlockNodes.has(coorNo)) {
-        object.mesh.material.color.setColorName(initialColorOfCube);
+        object.mesh.material.color.setStyle(initialColorOfCube);
         object.mesh.position.z = initialPosZOfCube;
       }
     });
@@ -190,7 +221,7 @@ function copyStartStopBlockNodes() {
 function setMeshesToDefaut(objects) {
   objects.forEach((rowOfObject) => {
     rowOfObject.forEach((object) => {
-      object.mesh.material.color.setColorName(initialColorOfCube);
+      object.mesh.material.color.setStyle(initialColorOfCube);
       object.mesh.position.z = initialPosZOfCube;
     });
   });

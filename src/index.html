@@ -3,27 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./main.css" />
+
     <title>PathFinding3D</title>
+    <style>
+      #canv {
+        background-color: blue;
+      }
+    </style>
+    <link rel="stylesheet" href="./main.css" />
   </head>
   <body class="body">
     <div class="contain">
       <canvas id="canv"></canvas>
       <div id="controls">
-        <select id="algorithms">
-          <option value="dijkstra">Dijkstra</option>
-          <option value="aStar">Astar</option>
-          <option value="bfs">Bfs</option>
-        </select>
-        <button class="setStartNode">SetStartNode</button>
-        <button class="setStopNode">SetStopNode</button>
-        <button class="setBlockers">SetBlockers</button>
-
-        <button class="startButton">Start</button>
-        <button class="startNew">StartNew</button>
+        <div class="button_con">
+          <select id="algorithms" class="button algorithm">
+            <option value="dijkstra">Dijkstra</option>
+            <option value="aStar">Astar</option>
+            <option value="bfs">Bfs</option>
+          </select>
+          <button class="button setStartNode">SetStartNode</button>
+        </div>
+        <div class="button_con">
+          <button class="button setStopNode">SetStopNode</button>
+          <button class="button setBlockers">SetBlockers</button>
+        </div>
+        <div class="button_con">
+          <button class="button startButton">Start</button>
+          <button class="button startNew">StartNew</button>
+        </div>
       </div>
     </div>
-
     <script src="./app.js"></script>
   </body>
 </html>

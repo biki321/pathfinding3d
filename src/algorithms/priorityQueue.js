@@ -9,6 +9,7 @@ class PriorityQueue {
     this.heap = [null];
   }
   isEmpty() {
+    console.log(`heap.l: ${this.heap.length} and ${this.heap}`);
     return this.heap.length === 0;
   }
 

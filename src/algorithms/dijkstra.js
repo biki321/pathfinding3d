@@ -23,6 +23,17 @@ async function dijkstra(
   //delay for visual experience
   await sleep(1000);
 
+  new TWEEN.Tween({ z: heightestValOfZForCube })
+    .to({ z: 0.2 }, 300)
+    .easing(TWEEN.Easing.Linear.None)
+    .onUpdate((tweenObj) => {
+      this.objects[startNode[0]][startNode[1]].mesh.position.z = tweenObj.z;
+    })
+    .repeat(1)
+    .repeatDelay(0)
+    .yoyo({ yoyo: true })
+    .start();
+
   //it will store tween object for all the cubes in the board
   const tweens = [];
 
@@ -60,6 +71,9 @@ async function dijkstra(
 
   while (!remaining.isEmpty()) {
     const n = remaining.remove();
+    if (n === null) {
+      return { shortestDist: -1, path: previous };
+    }
     console.log(n);
     console.log(n.value);
 

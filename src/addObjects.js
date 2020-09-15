@@ -28,8 +28,9 @@ function addObjects() {
   });
   const planeMesh = new THREE.Mesh(planeGeo, planeMat);
   planeMesh.name = "planeMesh";
-  // planeMesh.rotation.x = Math.PI * -.3;
-  // planeMesh.rotation.y = Math.PI * .1;
+  planeMesh.rotateX(Math.PI * -0.4);
+  // planeMesh.rotateY(Math.PI * -0.1);
+  planeMesh.rotateZ(Math.PI * 0.2);
   this.scene.add(planeMesh);
 
   const topLeftCoorInPlane_y = topLeftCoorOfPlane_y;

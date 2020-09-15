@@ -9,9 +9,17 @@ body {
   display: flex;
   width: 100vw;
   height: 100vh;
-  background-color: chartreuse;
+  background-color: #a4fba6;
   align-items: center;
-  /* justify-content: center; */
+  justify-content: center;
+}
+
+#canv {
+  color: #a4fba6;
+  margin-right: 0.4%;
+  margin-left: 0.4%;
+  width: 750px;
+  height: 600px;
 }
 
 .controls {
@@ -20,12 +28,97 @@ body {
   width: 250px;
   height: 97%;
   background-color: aqua;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-#canv {
-  margin-right: 0.8%;
-  width: 750px;
-  height: 600px;
+.button_con {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.button {
+  background-color: #4caf50; /* Green */
+  border: 2px solid #4caf50;
+  border-radius: 5px;
+  color: white;
+  padding: 8px 14px;
+  text-align: center;
+  text-decoration: none;
+  /* display: inline-block; */
+  font-size: 14px;
+  margin: 10px 4px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  outline-width: 10px;
+}
+
+.highlight {
+  /* border: 2px solid black; */
+  border-color: black;
+  /* background-color: black; */
+}
+
+.setStartNode {
+  background-color: #189ad3;
+  color: white;
+  /* border: 2px solid #4caf50; */
+}
+
+.setStartNode:hover {
+  background-color: #4caf50;
+  color: white;
+}
+
+.setStopNode {
+  background-color: #a4de02;
+  color: white;
+  /* border: 2px solid #4caf50; */
+}
+
+.setStopNode:hover {
+  background-color: #4caf50;
+  color: white;
+}
+
+.setBlockers {
+  background-color: #c87941;
+  color: white;
+  /* border: 2px solid #4caf50; */
+}
+
+.setBlockers:hover {
+  background-color: #4caf50;
+  color: white;
+}
+
+.startButton {
+  border-radius: 0px;
+  outline: none;
+  background-color: white;
+  color: black;
+  border: 2px solid #e7e7e7;
+}
+
+.startButton:hover {
+  background-color: #e7e7e7;
+}
+
+.startNew {
+  outline-style: none;
+  background-color: white;
+  color: black;
+  border: 2px solid #4caf50;
+}
+
+.startNew:hover {
+  background-color: #555555;
+  color: white;
+}
+
+.algorithm {
+  outline: none;
 }
 
 /* #editor {
