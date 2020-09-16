@@ -14,7 +14,32 @@
     <link rel="stylesheet" href="./main.css" />
   </head>
   <body class="body">
+    <!-- modal is used to show the user guide -->
+    <div class="modal-overlay" id="modal-overlay"></div>
+    <div id="modal" class="modal">
+      <button class="button close-button" id="close-button">&times;</button>
+      <div class="modal-guts">
+        <!-- here will go the actual slides for the user guide -->
+        <img class="tab" src="../screenshots/welcome.png" alt="" />
+        <img class="tab" src="../screenshots/guide1.png" alt="" />
+      </div>
+
+      <div class="prevNextBtn">
+        <button type="button" id="prevBtn" class="button prevBtn">
+          Previous
+        </button>
+        <button type="button" id="nextBtn" class="button nextBtn">Next</button>
+      </div>
+
+      <!-- Circles which indicates the slides of the guide -->
+      <div class="stepDiv">
+        <span class="step"></span>
+        <span class="step"></span>
+      </div>
+    </div>
+
     <div class="contain">
+      <button id="open-button" class="button open-button">Guide</button>
       <canvas id="canv"></canvas>
       <div id="controls">
         <div class="button_con">

@@ -4,7 +4,10 @@ import {
   setMeshExceptStartStopBlockNodeToDefaut,
   copyStartStopBlockNodes,
 } from "./helperFunc";
-var currentbtn;
+
+var currentBlockSelectorBtn;
+var currentTab = 0;
+
 function setButtonsevents(objects) {
   const setStartNode = document.querySelector(".setStartNode");
   const setStopNode = document.querySelector(".setStopNode");
@@ -12,7 +15,6 @@ function setButtonsevents(objects) {
   const startButton = document.querySelector(".startButton");
   const startNew = document.querySelector(".startNew");
   const canvas = document.getElementById("canv");
-
   const algorithms = document.querySelector("#algorithms");
 
   setStartNode.addEventListener("click", () => {
@@ -61,12 +63,12 @@ function setButtonsevents(objects) {
     console.log("hiii");
     ele.addEventListener("click", function () {
       console.log(`clicked on ${this}`);
-      if (currentbtn) {
-        console.log(currentbtn);
-        currentbtn.classList.remove("highlight");
+      if (currentBlockSelectorBtn) {
+        console.log(currentBlockSelectorBtn);
+        currentBlockSelectorBtn.classList.remove("highlight");
       }
       this.classList.add("highlight");
-      currentbtn = this;
+      currentBlockSelectorBtn = this;
     });
   });
 
@@ -76,6 +78,101 @@ function setButtonsevents(objects) {
       clearMemory(this);
     }.bind(objects)
   );
+
+  controlModalGuide();
+}
+
+function controlModalGuide() {
+  console.log("entered int o modal");
+  const modal = document.querySelector("#modal");
+  const modalOverlay = document.querySelector("#modal-overlay");
+  const closeButton = document.querySelector("#close-button");
+  const openButton = document.querySelector("#open-button");
+
+  window.addEventListener("load", () => {
+    showTab(currentTab);
+  });
+
+  //close the entire modal
+  closeButton.addEventListener("click", function () {
+    modal.classList.toggle("closed");
+    modalOverlay.classList.toggle("closed");
+  });
+
+  //open the entire modal
+  openButton.addEventListener("click", function () {
+    modal.classList.toggle("closed");
+    modalOverlay.classList.toggle("closed");
+    showTab(currentTab);
+  });
+
+  const preBtn = document.querySelector("#prevBtn");
+  const nextBtn = document.querySelector("#nextBtn");
+
+  preBtn.addEventListener("click", function () {
+    nextPrev(-1);
+  });
+
+  nextBtn.addEventListener("click", function () {
+    nextPrev(+1);
+  });
+}
+
+function showTab(n) {
+  // This function will display the specified tab of the form...
+  const tabs = document.querySelectorAll(".tab");
+  tabs[n].style.display = "block";
+
+  const prevBtn = document.querySelector("#prevBtn");
+  const nextBtn = document.querySelector("#nextBtn");
+
+  //... and fix the Previous/Next buttons:
+  if (n == 0) {
+    console.log(`prevBtn: ${prevBtn.style}`);
+    prevBtn.style.display = "none";
+  } else {
+    console.log(`prevBtn: ${prevBtn}`);
+    prevBtn.style.display = "inline";
+  }
+  if (n == tabs.length - 1) {
+    nextBtn.innerHTML = "Finish";
+  } else {
+    nextBtn.innerHTML = "Next";
+  }
+  //... and run a function that will display the correct step indicator:
+  fixStepIndicator(n);
+}
+
+function nextPrev(n) {
+  // This function will figure out which tab to display
+  const tabs = document.querySelectorAll(".tab");
+
+  // Hide the current tab:
+  tabs[currentTab].style.display = "none";
+  // Increase or decrease the current tab by 1:
+  currentTab = currentTab + n;
+
+  // if you have reached the end of the slides..
+  if (currentTab >= tabs.length) {
+    //close the entire modal
+    const modal = document.querySelector("#modal");
+    const modalOverlay = document.querySelector("#modal-overlay");
+    currentTab = 0;
+    modal.classList.toggle("closed");
+    modalOverlay.classList.toggle("closed");
+    return;
+  }
+  // Otherwise, display the correct tab:
+  showTab(currentTab);
+}
+
+function fixStepIndicator(n) {
+  const steps = document.querySelectorAll(".step");
+  steps.forEach(function (ele, indx) {
+    if (n === indx) {
+      ele.classList.add("active");
+    } else ele.classList.remove("active");
+  });
 }
 
 export { setButtonsevents };
