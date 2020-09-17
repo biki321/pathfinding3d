@@ -1,7 +1,6 @@
 # Pathfinding3D
 
-**Visualize finding the shortest path with 3D animation .
-It is a webapp to visualize the algorithms like Dijkstra, Astar, Bfs with 3D animation right on your browser which finds the shortest path between two nodes.**
+** This is a path finding algorithm visualizer with 3D animation which  finds the shortest path between two nodes .It is a webapp to visualize the algorithms like Dijkstra's algorithm, A* search, Breath-first-search with 3D animation right on your browser . **
 
 ![visualize in 3D](/gif/pf1.gif)
 
