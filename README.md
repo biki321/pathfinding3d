@@ -5,7 +5,7 @@
 ![visualize in 3D](/gif/pf1.gif)
 
 
-### try the live [demo](%28https://pathfinding3d.netlify.app/%29)
+### try the live [demo](https://pathfinding3d.netlify.app/)
 
 [
 ![GitHub forks](https://img.shields.io/github/forks/biki321/pathfinding3d)](https://github.com/biki321/pathfinding3d/network) [![GitHub issues](https://img.shields.io/github/issues/biki321/pathfinding3d)](https://github.com/biki321/pathfinding3d/issues) [![GitHub stars](https://img.shields.io/github/stars/biki321/pathfinding3d)](https://github.com/biki321/pathfinding3d/stargazers) ![GitHub](https://img.shields.io/github/license/biki321/pathfinding3d)
