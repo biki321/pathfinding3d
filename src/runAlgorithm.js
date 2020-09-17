@@ -7,7 +7,6 @@ import { cubeSelectState as cubeSelectStateOrigin } from "./cubeSelectState";
 function runAlgorithm() {
   // cubeSelectStateOrigin
   let main = this;
-  console.log(main.canvas);
   const canvas = document.getElementById("canv");
   const controls = document.getElementById("controls");
   this.canvas.addEventListener(
@@ -15,7 +14,6 @@ function runAlgorithm() {
     async function () {
       const algorithms = document.querySelector("#algorithms");
 
-      console.log("runAlgorithm1");
       if (
         typeof cubeSelectStateOrigin.startNode !== "undefined" &&
         typeof cubeSelectStateOrigin.stopNode !== "undefined"
@@ -24,10 +22,7 @@ function runAlgorithm() {
         canvas.style.pointerEvents = "none";
         controls.style.pointerEvents = "none";
 
-        console.log("under the runAlgorithm1");
-        console.log(`event of runAlgo : ${event.algorithm}`);
         if (algorithms.value === "bfs") {
-          console.log("bfs in run ");
           await bfs.call(
             this,
             cubeSelectStateOrigin.startNode,
@@ -35,7 +30,6 @@ function runAlgorithm() {
             cubeSelectStateOrigin.blockers
           );
         } else if (algorithms.value === "aStar") {
-          console.log("astar");
           await aStar.call(
             this,
             cubeSelectStateOrigin.startNode,
@@ -43,7 +37,6 @@ function runAlgorithm() {
             cubeSelectStateOrigin.blockers
           );
         } else if (algorithms.value === "dijkstra") {
-          console.log("dijkstra");
           await dijkstra.call(
             this,
             cubeSelectStateOrigin.startNode,

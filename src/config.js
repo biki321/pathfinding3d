@@ -27,8 +27,6 @@ for (let y = 0; y < noOfCubes; y++) {
   }
 }
 
-console.log(board[0][0]);
-
 export {
   sizeOfPlane,
   sizeOfCube,

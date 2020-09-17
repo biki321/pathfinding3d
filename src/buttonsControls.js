@@ -30,9 +30,7 @@ function setButtonsevents(objects) {
   });
 
   startButton.addEventListener("click", function () {
-    console.log("strt");
     const algorithmToexecute = algorithms.value;
-    console.log(`in setButton ${algorithmToexecute}`);
     // let e = new CustomEvent("runAlgorithm", { algorithm: algorithmToexecute });
     let e = new Event("runAlgorithm");
     //runAlgorithm function(runAlgorithm.js) is using this event
@@ -60,11 +58,8 @@ function setButtonsevents(objects) {
   //make a button unfocused only after clicking in any other button
   //not in screen
   [setStartNode, setStopNode, setBlockers].forEach(function (ele) {
-    console.log("hiii");
     ele.addEventListener("click", function () {
-      console.log(`clicked on ${this}`);
       if (currentBlockSelectorBtn) {
-        console.log(currentBlockSelectorBtn);
         currentBlockSelectorBtn.classList.remove("highlight");
       }
       this.classList.add("highlight");
@@ -83,7 +78,6 @@ function setButtonsevents(objects) {
 }
 
 function controlModalGuide() {
-  console.log("entered int o modal");
   const modal = document.querySelector("#modal");
   const modalOverlay = document.querySelector("#modal-overlay");
   const closeButton = document.querySelector("#close-button");
@@ -128,10 +122,8 @@ function showTab(n) {
 
   //... and fix the Previous/Next buttons:
   if (n == 0) {
-    console.log(`prevBtn: ${prevBtn.style}`);
     prevBtn.style.display = "none";
   } else {
-    console.log(`prevBtn: ${prevBtn}`);
     prevBtn.style.display = "inline";
   }
   if (n == tabs.length - 1) {

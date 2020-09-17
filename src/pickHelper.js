@@ -28,7 +28,6 @@ class PickHelper {
         this.pickedObject.info.row <= topLeftCoorOfPlane_y &&
         this.pickedObject.info.row >= -topLeftCoorOfPlane_y
       ) {
-        // console.log(this.pickedObject.info);
         setStartStopBlockerAndAnimate(this.pickedObject, cubeSelectState);
       }
     }

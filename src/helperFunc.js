@@ -61,10 +61,8 @@ const sleep = (ms) => {
 
 function printPath(previous, start, stop) {
   let currentNode = stop;
-  console.log(currentNode);
   while (currentNode !== start) {
     currentNode = previous.get(currentNode);
-    console.log(currentNode);
   }
 }
 

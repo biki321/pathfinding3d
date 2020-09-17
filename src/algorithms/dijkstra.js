@@ -74,15 +74,12 @@ async function dijkstra(
     if (n === null) {
       return { shortestDist: -1, path: previous };
     }
-    console.log(n);
-    console.log(n.value);
 
     let nCoor = convertNosToCoor(n.value);
 
     visited.add(n.value);
 
     if (n.value == stop) {
-      console.log(` shortest dist: ${distances.get(stop)} `);
       //animation for the stop node when it is found
       // eslint-disable-next-line
       const stopNodeFound = new TWEEN.Tween({ z: heightestValOfZForCube })

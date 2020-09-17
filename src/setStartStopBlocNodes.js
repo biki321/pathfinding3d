@@ -19,7 +19,6 @@ function setPickPosition(event, cubeSelectStateJson, data) {
   pickPosition.x = (pos.x / canvas.width) * 2 - 1;
   pickPosition.y = (pos.y / canvas.height) * -2 + 1; // note we flip Y
 
-  console.log(data.pickHelper);
   data.pickHelper.pickAndSet(
     pickPosition,
     cubeSelectState,

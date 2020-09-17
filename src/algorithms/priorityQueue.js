@@ -9,7 +9,6 @@ class PriorityQueue {
     this.heap = [null];
   }
   isEmpty() {
-    console.log(`heap.l: ${this.heap.length} and ${this.heap}`);
     return this.heap.length === 0;
   }
 
@@ -53,9 +52,6 @@ class PriorityQueue {
       this.heap[currentChildIdx] = currentNode;
       this.heap[currentIdx] = currentChildNode;
 
-      console.log(
-        `currentIdx: ${currentIdx}, currentChildIdx : ${currentChildIdx}`
-      );
       currentIdx = currentChildIdx;
       [left, right] = [2 * currentIdx, 2 * currentIdx + 1];
       if (this.heap[left] === undefined || this.heap[right] === undefined)

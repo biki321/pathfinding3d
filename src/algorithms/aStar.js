@@ -86,7 +86,6 @@ async function aStar(
     visited.add(n.value);
 
     if (n.value == stop) {
-      console.log(` shortest dist: ${distances.get(stop)} `);
       //animation for the stop node when it is found
       // eslint-disable-next-line
       const stopNodeFound = new TWEEN.Tween({ z: heightestValOfZForCube })

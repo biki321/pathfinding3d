@@ -68,7 +68,6 @@ async function bfs(
     let { node, dist } = queue.shift();
 
     if (node == stop) {
-      console.log(`shortestDistande: : ${dist}`);
       //animation for the stop node when it is found
       // eslint-disable-next-line
       const stopNodeFound = new TWEEN.Tween({ z: heightestValOfZForCube })
@@ -133,7 +132,7 @@ async function bfs(
       }
     }
   }
-  console.log("Not found");
+
   return { shortestDistance: -1, previous };
 }
 
