@@ -3,7 +3,8 @@
 **Visualize finding the shortest path with 3D animation .
 It is a webapp to visualize the algorithms like Dijkstra, Astar, Bfs with 3D animation right on your browser which finds the shortest path between two nodes.**
 
-![visualize in 3D](gif\pf1.gif)
+![visualize in 3D](/gif/pf1.gif)
+
 
 ### try the live [demo](%28https://pathfinding3d.netlify.app/%29)
 
